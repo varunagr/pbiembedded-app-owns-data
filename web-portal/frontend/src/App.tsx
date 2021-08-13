@@ -1,26 +1,24 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import { Header } from './Header';
+import { HomePage } from './HomePage';
+import { fontFamily, fontSize, gray2 } from './Styles';
+/** @jsxRuntime classic */
+/** @jsx jsx */
+import { jsx, css } from "@emotion/react";
+const App: React.FC = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div 
+      css={css`
+      font-family: ${fontFamily};
+      font-size: ${fontSize};
+      color: ${gray2};
+    `}
+    >
+      <Header />
+      <HomePage />
     </div>
   );
-}
+};
 
 export default App;

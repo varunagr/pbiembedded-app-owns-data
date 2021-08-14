@@ -14,6 +14,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -486,15 +488,16 @@ public class PowerBiService {
         return embedToken;
     }
 
-    public static String Import(String accessToken) throws UnsupportedOperationException, IOException {
+    public static String importFile(String accessToken, String filePath) throws UnsupportedOperationException, IOException {
         String bearer = "Bearer " + accessToken;
-        String fileName = "SalesReportTemplate.pbix";
-        String filePath = Config.datasetFilePath;
+        //String fileName = "SalesReportTemplate.pbix";
+        String fileName = Paths.get(filePath).getFileName().toString();
+        //String filePath = Config.datasetFilePath;
         String groupId = Config.workspaceId;
 
         HttpClient request = HttpClientBuilder.create().build();
 
-        HttpPost post = new HttpPost( "https://api.powerbi.com/v1.0/myorg/groups/" + groupId + "/imports?datasetDisplayName=MyNewReport" );
+        HttpPost post = new HttpPost( "https://api.powerbi.com/v1.0/myorg/groups/" + groupId + "/imports?datasetDisplayName=" + fileName);
 
         long time = (new Date()).getTime();
         String boundary = "---------------------------" + time;
@@ -509,21 +512,8 @@ public class PowerBiService {
         post.setEntity( multipart );
         HttpResponse response = null;
 
-        /*/
-        BufferedReader reqd = new BufferedReader( new InputStreamReader( post.getEntity().getContent() ) );
-
-        StringBuffer bbody = new StringBuffer();
-        String l = "";
-        while ( (l = reqd.readLine()) != null ) {
-            bbody.append( l );
-        }
-        System.out.println( bbody.toString() );
-        /*/
-
-
         try {
             response = request.execute( post );
-            int x = 0;
         } catch ( ClientProtocolException e ) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -532,7 +522,7 @@ public class PowerBiService {
             e.printStackTrace();
         }
 
-        BufferedReader rd = new BufferedReader( new InputStreamReader( response.getEntity().getContent() ) );
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
 
         StringBuffer result = new StringBuffer();
         String line = "";

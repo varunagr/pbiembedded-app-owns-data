@@ -1,6 +1,7 @@
 package com.gpsuscodewith.powerbiembedded.appownsdata.web;
 
 //import com.azure.core.annotation.Delete;
+import com.gpsuscodewith.powerbiembedded.appownsdata.config.Config;
 import com.gpsuscodewith.powerbiembedded.appownsdata.domain.Dataset;
 import com.gpsuscodewith.powerbiembedded.appownsdata.repositories.DatasetRepository;
 //import org.simpleframework.xml.Path;
@@ -62,7 +63,7 @@ public class DatasetsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(interruptedEx.getMessage());
         }
 
-        String result = PowerBiService.Import(accessToken);
+        String result = PowerBiService.importFile(accessToken, Config.datasetFilePath);
 
         return ResponseEntity.created(new URI("/datasets/" + savedDataset.getId())).body(savedDataset);
     }

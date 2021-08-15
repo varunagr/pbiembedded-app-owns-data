@@ -1,15 +1,15 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx, css } from "@emotion/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FC } from "react";
 import { PrimaryButton } from './Styles';
 import { DatasetList } from "./Datasets";
 import { getDatasets, DatasetData } from "./DatasetData"
 import { Page } from "./Page";
 import { PageTitle } from "./PageTitle";
+import { RouteComponentProps } from "react-router-dom";
 
-
-export const HomePage = () => {
+export const HomePage: FC<RouteComponentProps> = ({ history }) => {
     const [dataSets, setDataSets] = useState<DatasetData[] | null>(null);
     const [dataSetsLoading, setDatasetsLoading] = useState(true);
     useEffect(() => {
@@ -22,7 +22,7 @@ export const HomePage = () => {
     }, []);
     console.log('rendered');
     const handleImportClick = () => {
-        console.log('TODO - move to another package');
+        history.push('/import');
     };
     return (
     <Page>

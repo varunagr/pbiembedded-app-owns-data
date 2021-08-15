@@ -1,13 +1,30 @@
 /** @jsxRuntime classic */
 /** @jsx jsx */
 import { jsx, css } from "@emotion/react";
+import { useEffect, useState } from "react";
 import { PrimaryButton } from './Styles';
 import { DatasetList } from "./Datasets";
-import { getDatasets} from "./DatasetData"
+import { getDatasets, DatasetData } from "./DatasetData"
 import { Page } from "./Page";
 import { PageTitle } from "./PageTitle";
 
-export const HomePage = () => (
+
+export const HomePage = () => {
+    const [dataSets, setDataSets] = useState<DatasetData[] | null>(null);
+    const [dataSetsLoading, setDatasetsLoading] = useState(true);
+    useEffect(() => {
+        const doGetDatasets = async () => {
+            const dataSets = await getDatasets(); 
+            setDataSets(dataSets);
+            setDatasetsLoading(false);
+        };
+        doGetDatasets();
+    }, []);
+    console.log('rendered');
+    const handleImportClick = () => {
+        console.log('TODO - move to another package');
+    };
+    return (
     <Page>
         <div
             css={css`
@@ -33,9 +50,19 @@ export const HomePage = () => (
                 `}
                 
                 >Datasets</h2>
-            <PrimaryButton>Import All Into Power BI</PrimaryButton>
+            <PrimaryButton onClick={handleImportClick}>Import All Into Power BI</PrimaryButton>
             </div>
-            <DatasetList data={getDatasets()} />
-        </div>
+            </div>
+            { dataSetsLoading ? (
+                <div
+                    css={css`
+                        font-size: 16px;
+                        font-style: italic;
+                    `}
+                    >
+                    Loading...
+                </div>) : (
+                <DatasetList data={dataSets || []} />
+            )}
     </Page>
-);
+)};

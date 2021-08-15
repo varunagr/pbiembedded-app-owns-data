@@ -1,3 +1,5 @@
+import { wait, waitFor } from "@testing-library/dom";
+
 export interface DatasetData {
     datasetId: number;
     tenantId: number;
@@ -48,6 +50,11 @@ const datasets: DatasetData[] = [
     }
 ];
 
-export const getDatasets = (): DatasetData[] => {
+const waitFn = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export const getDatasets = async (): Promise<DatasetData[]> => {
+    await waitFn(500);
     return datasets;
 }

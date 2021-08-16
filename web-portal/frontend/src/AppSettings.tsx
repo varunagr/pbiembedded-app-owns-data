@@ -1,16 +1,17 @@
 export const server =
   process.env.REACT_APP_ENV === 'production'
-    ? 'https://your-backend.azurewebsites.net'
+    ? 'http://localhost:8080'
     : process.env.REACT_APP_ENV === 'staging'
-    ? 'https://your-backend-staging.azurewebsites.net'
-    : 'http://localhost:17525';
+    ? 'http://localhost:8080'
+    : 'http://localhost:8080';
 
-export const webAPIUrl = `${server}/api`;
+//export const webAPIUrl = `${server}/api`;
+export const webAPIUrl = 'http://localhost:8080';
 
 export const authSettings = {
   domain: 'bobjac.auth0.com',
-  client_id: 'bkZ0f24xJYxIQwH9ka3LHmtHUWIqsNzZ',
+  client_id: 'UDEH8J0xr0DzraJtnwcjyB0Wj5hfIYPS',
   redirect_uri: window.location.origin + '/signin-callback',
-  scope: 'openid profile QandAAPI email',
-  audience: 'https://quickstarts/api',
+  scope: 'read:datasets',
+  audience: 'https://appownsdataapi',
 };

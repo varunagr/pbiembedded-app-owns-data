@@ -31,8 +31,8 @@ export const Dataset: FC<Props> = ({ data }) => (
         color: ${gray3};
       `}
     >
-      {`Created on
-        ${data.createDate.toLocaleDateString()} ${data.createDate.toLocaleTimeString()}`}
+      {`Created by
+        ${data.createdBy} `}
     </div>
     <PrimaryButton>Import Into Power BI</PrimaryButton>
     </div>

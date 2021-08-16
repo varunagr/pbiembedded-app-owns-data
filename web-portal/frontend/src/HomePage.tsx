@@ -8,22 +8,30 @@ import { getDatasets, DatasetData } from "./DatasetData"
 import { Page } from "./Page";
 import { PageTitle } from "./PageTitle";
 import { RouteComponentProps } from "react-router-dom";
+import { useAuth } from "./Auth";
 
 export const HomePage: FC<RouteComponentProps> = ({ history }) => {
-    const [dataSets, setDataSets] = useState<DatasetData[] | null>(null);
+    const [dataSets, setDataSets] = useState<DatasetData[]>([]);
     const [dataSetsLoading, setDatasetsLoading] = useState(true);
+    const { isAuthenticated } = useAuth();
     useEffect(() => {
+     //   let cancelled = false;
         const doGetDatasets = async () => {
             const dataSets = await getDatasets(); 
-            setDataSets(dataSets);
-            setDatasetsLoading(false);
+      //      if (!cancelled) {
+                setDataSets(dataSets);
+                setDatasetsLoading(false);
+      //      }
         };
+        console.log("before call to doGetDatasets() with an isAuthenticated value of " + isAuthenticated);
         doGetDatasets();
     }, []);
     console.log('rendered');
     const handleImportClick = () => {
         history.push('/import');
     };
+    
+    console.log('The value of isAuthenticatd is ' + isAuthenticated);
     return (
     <Page>
         <div

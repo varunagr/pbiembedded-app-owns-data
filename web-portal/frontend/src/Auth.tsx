@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, createContext, FC } from 'react';
 import createAuth0Client, { Auth0Client } from '@auth0/auth0-spa-js';
 import { authSettings } from './AppSettings';
+//import { useAuth0 } from "@auth0/auth0-react";
 
 interface Auth0User {
   name?: string;
@@ -38,13 +39,16 @@ export const AuthProvider: FC = ({ children }) => {
         window.location.pathname === '/signin-callback' &&
         window.location.search.indexOf('code=') > -1
       ) {
+        console.log('received code back from auth0');
         await auth0FromHook.handleRedirectCallback();
         window.location.replace(window.location.origin);
       }
 
       const isAuthenticatedFromHook = await auth0FromHook.isAuthenticated();
+      console.log("The value of isAuthenticatedFromHook on line 47 is " + isAuthenticatedFromHook);
       if (isAuthenticatedFromHook) {
         const user = await auth0FromHook.getUser();
+        console.log('auth0FromHook.getUser() was successful');
         setUser(user);
       }
       setIsAuthenticated(isAuthenticatedFromHook);
@@ -79,8 +83,27 @@ export const AuthProvider: FC = ({ children }) => {
   );
 };
 
+
 export const getAccessToken = async () => {
+  console.log('Inside getAccessToken');
   const auth0FromHook = await createAuth0Client(authSettings);
-  const accessToken = await auth0FromHook.getTokenSilently();
+  console.log('After call to auth0FromHook');
+  let accessToken = '';
+  //try {
+    accessToken = await auth0FromHook.getTokenSilently({
+        audience: "https://appownsdataapi",
+        claim: "read:datasets"
+    });
+//  } catch (e) {
+ //   if (e.error === 'login_required') {
+//        auth0FromHook.loginWithRedirect();
+//    }
+//    if (e.error === 'consent_required') {
+//        auth0FromHook.loginWithRedirect();
+//    }
+//    throw e;
+//  }
+  
   return accessToken;
 };
+

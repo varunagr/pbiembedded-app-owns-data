@@ -21,7 +21,7 @@ export const Header = () => (
         box-shadow: 0 3px 7px 0 rgba(110, 112, 114, 0.21);
         `}
     >
-        <Link to="./"
+        <Link to="./home"
             css={css`
             font-size: 24px;
             font-weight: bold;

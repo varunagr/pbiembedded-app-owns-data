@@ -11,6 +11,7 @@ interface Props {
 
 export const SignInPage = ({ action }: Props) => {
   const { signIn } = useAuth();
+  console.log('inside signing page');
   if (action === 'signin') {
     signIn();
   }

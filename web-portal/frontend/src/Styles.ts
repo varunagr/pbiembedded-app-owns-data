@@ -34,3 +34,7 @@ export const PrimaryButton = styled.button`
   }
 `;
 
+export const StatusText = styled.div`
+  text-align: center;
+`;
+

@@ -13,7 +13,7 @@ import { useAuth } from "./Auth";
 export const HomePage: FC<RouteComponentProps> = ({ history }) => {
     const [dataSets, setDataSets] = useState<DatasetData[]>([]);
     const [dataSetsLoading, setDatasetsLoading] = useState(true);
-    const { isAuthenticated } = useAuth();
+    
     useEffect(() => {
      //   let cancelled = false;
         const doGetDatasets = async () => {
@@ -23,14 +23,14 @@ export const HomePage: FC<RouteComponentProps> = ({ history }) => {
                 setDatasetsLoading(false);
       //      }
         };
-        console.log("before call to doGetDatasets() with an isAuthenticated value of " + isAuthenticated);
+        
         doGetDatasets();
     }, []);
     console.log('rendered');
     const handleImportClick = () => {
         history.push('/import');
     };
-    
+    const { isAuthenticated } = useAuth();
     console.log('The value of isAuthenticatd is ' + isAuthenticated);
     return (
     <Page>

@@ -32,7 +32,7 @@ export const getDatasets = async (): Promise<DatasetData[]> => {
   //  const accessToken = await getAccessToken();
     const result = await http<DatasetDataFromServer[]>({
         path: '/datasets',
-  //      accessToken: accessToken
+     //   accessToken: accessToken
     });
     if (result.ok && result.body) {
         return result.body.map(mapDatasetDataFromServer);

@@ -87,7 +87,10 @@ export const AuthProvider: FC = ({ children }) => {
 export const getAccessToken = async () => {
   console.log('Inside getAccessToken');
   const auth0FromHook = await createAuth0Client(authSettings);
+  
   console.log('After call to auth0FromHook');
+  const isAuthenticated = await auth0FromHook.isAuthenticated();
+  console.log('After call from auth0Client.isAuthenticated with a value of ' + isAuthenticated);
   let accessToken = '';
   //try {
     accessToken = await auth0FromHook.getTokenSilently({

@@ -9,9 +9,9 @@ export const server =
 export const webAPIUrl = 'http://localhost:8080';
 
 export const authSettings = {
-  domain: 'bobjac.auth0.com',
-  client_id: 'UDEH8J0xr0DzraJtnwcjyB0Wj5hfIYPS',
+  domain: '[DOMAIN GOES HERE]',
+  client_id: '[CLIENT ID GOES HERE]',
   redirect_uri: window.location.origin + '/signin-callback',
   scope: 'read:datasets',
-  audience: 'https://appownsdataapi',
+  audience: '[AUDIENCE GOES HERE]',
 };

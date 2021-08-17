@@ -1,11 +1,47 @@
+import { wait, waitFor } from "@testing-library/dom";
+import { getAccessToken } from "./Auth";
+import { http } from './http';
+
 export interface DatasetData {
-    datasetId: number;
+    id: number;
     tenantId: number;
+    pbiWorkspace: string;
     datasetName: string;
-    tags: string[];
-    createDate: Date;
+ //   tags: string[];
+ //   createDate: Date;
+    createdBy: string;
 }
 
+export interface DatasetDataFromServer {
+    id: number;
+    tenantId: number;
+    pbiWorkspace: string;
+    datasetName: string;
+ //   tags: string[];
+ //   createDate: Date;
+    createdBy: string;
+}
+
+export const mapDatasetDataFromServer = (
+    dataSet: DatasetDataFromServer,
+): DatasetData => ({
+    ...dataSet
+});
+
+export const getDatasets = async (): Promise<DatasetData[]> => {
+  //  const accessToken = await getAccessToken();
+    const result = await http<DatasetDataFromServer[]>({
+        path: '/datasets',
+     //   accessToken: accessToken
+    });
+    if (result.ok && result.body) {
+        return result.body.map(mapDatasetDataFromServer);
+    } else {
+        return [];
+    }
+};
+
+/*
 const datasets: DatasetData[] = [
     {
         datasetId: 1,
@@ -48,6 +84,11 @@ const datasets: DatasetData[] = [
     }
 ];
 
-export const getDatasets = (): DatasetData[] => {
-    return datasets;
+const waitFn = (ms: number): Promise<void> => {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+export const getDatasets = async (): Promise<DatasetData[]> => {
+    await waitFn(500);
+    return datasets;
+}*/

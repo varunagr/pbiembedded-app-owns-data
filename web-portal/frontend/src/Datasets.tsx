@@ -26,7 +26,7 @@ export const DatasetList: FC<Props> = ({data}) => (
     >
         {data.map(dataSet => (
             <li
-            key={dataSet.datasetId}
+            key={dataSet.id}
             css={css`
                 border-top: 1px solid ${gray5};
                 :first-of-type {

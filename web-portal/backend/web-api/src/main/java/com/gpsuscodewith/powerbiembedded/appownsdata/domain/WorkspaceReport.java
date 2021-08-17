@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Entity
+@Table(name="workspacereport")
 public class WorkspaceReport {
     @Id
     @GeneratedValue

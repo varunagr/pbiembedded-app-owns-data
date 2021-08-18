@@ -3,8 +3,10 @@ import { Route, Switch } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import { NavBar, Footer, Loading } from "./components";
+import Report from "./components/report";
 import { Home, Profile, ExternalApi } from "./views";
 import ProtectedRoute from "./auth/protected-route";
+
 
 import "./app.css";
 

@@ -19,7 +19,7 @@ public abstract class Config {
     public static final String workspaceId = "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3";
 
     // The id of the report to embed.
-    public static final String reportId = "cb5b07b5-114c-4a83-b320-ec3433a77a45";
+    public static final String reportId = "6d864ca0-ed17-4dac-acd8-18e6a3fa2f84";
 
     // Enter Application Id / Client Id
     public static final String clientId = "d424a540-68fd-47eb-9123-5159d8eda653";

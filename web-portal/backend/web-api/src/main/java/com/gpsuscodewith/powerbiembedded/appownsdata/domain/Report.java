@@ -13,8 +13,9 @@ public class Report {
     private Long id;
     private String reportName;
     private Long workspaceId;
-    private String reportId;
+    private String pbiIdentifier;
     private String embedUrl;
+    private String accessToken;
 
     public Long getId() {
         return id;
@@ -40,12 +41,12 @@ public class Report {
         this.workspaceId = workspaceId;
     }
 
-    public String getReportId() {
-        return reportId;
+    public String getPbiIdentifier() {
+        return pbiIdentifier;
     }
 
-    public void setReportId(String reportId) {
-        this.reportId = reportId;
+    public void setPbiIdentifier(String reportId) {
+        this.pbiIdentifier = reportId;
     }
 
     public String getEmbedUrl() {
@@ -54,5 +55,13 @@ public class Report {
 
     public void setEmbedUrl(String embedUrl) {
         this.embedUrl = embedUrl;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 }

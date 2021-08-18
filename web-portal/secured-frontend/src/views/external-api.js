@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Link } from "react-router-dom";
 
 const ExternalApi = () => {
   const [message, setMessage] = useState("");
@@ -113,7 +114,7 @@ const ExternalApi = () => {
       )}
       <ul>
       {reports.map(report => (
-        <li key={report.id}>{report.reportName}</li>
+        <li key={report.id}><Link to={`/reports/${report.reportId}`}>{report.reportName}</Link></li>
       ))}
     </ul>
     </div>

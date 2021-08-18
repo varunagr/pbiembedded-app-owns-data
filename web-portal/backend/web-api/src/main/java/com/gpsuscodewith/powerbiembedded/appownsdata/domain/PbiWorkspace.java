@@ -13,7 +13,7 @@ public class PbiWorkspace {
     private Long id;
     private String workspaceLocation;
     private String workspaceName;
-
+    private String pbiIdentifier;
 
     public Long getId() {
         return id;
@@ -37,5 +37,13 @@ public class PbiWorkspace {
 
     public void setWorkspaceName(String workspaceName) {
         this.workspaceName = workspaceName;
+    }
+
+    public String getPbiIdentifier() {
+        return pbiIdentifier;
+    }
+
+    public void setPbiIdentifier(String pbiIdentifier) {
+        this.pbiIdentifier = pbiIdentifier;
     }
 }

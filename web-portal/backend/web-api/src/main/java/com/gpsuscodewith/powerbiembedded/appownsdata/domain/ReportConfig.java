@@ -17,6 +17,8 @@ public class ReportConfig {
 
     public String embedUrl = "";
 
+    public String accessToken = "";
+
     public String reportName = "";
 
     public Boolean isEffectiveIdentityRolesRequired = false;
@@ -35,6 +37,7 @@ public class ReportConfig {
             jsonObj.put("reportId", reportId);
             jsonObj.put("embedUrl", embedUrl);
             jsonObj.put("reportName", reportName);
+            jsonObj.put("accessToken", accessToken);
         } catch (JSONException e) {
             logger.error("DefaultListItem.toString JSONException: " + e.getMessage());
         }

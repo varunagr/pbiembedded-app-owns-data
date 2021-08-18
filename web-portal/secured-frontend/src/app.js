@@ -23,6 +23,7 @@ const App = () => {
           <Route path="/" exact component={Home} />
           <ProtectedRoute path="/profile" component={Profile} />
           <ProtectedRoute path="/external-api" component={ExternalApi} />
+          <ProtectedRoute path="/reports/:reportId" component={Report} />
         </Switch>
       </div>
       <Footer />

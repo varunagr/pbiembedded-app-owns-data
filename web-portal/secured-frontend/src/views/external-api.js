@@ -114,7 +114,7 @@ const ExternalApi = () => {
       )}
       <ul>
       {reports.map(report => (
-        <li key={report.id}><Link to={`/reports/${report.reportId}`}>{report.reportName}</Link></li>
+        <li key={report.id}><Link to={`/reports/${report.id}`}>{report.reportName}</Link></li>
       ))}
     </ul>
     </div>

@@ -17,9 +17,13 @@ public abstract class Config {
     //	Common configuration properties for both authentication types
     // Enter workspaceId / groupId
     public static final String workspaceId = "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3";
+    //public static final String workspaceId = "6e5482de-8849-4ec2-b432-0939f3a15f31";
 
     // The id of the report to embed.
     public static final String reportId = "6d864ca0-ed17-4dac-acd8-18e6a3fa2f84";
+
+    // this reportId is the dataset for report 6d864ca0-ed17-4dac-acd8-18e6a3fa2f84
+   // public static final String reportId = "19516b10-b7c4-408f-a6e2-c200fa45ee4a";
 
     // Enter Application Id / Client Id
     public static final String clientId = "d424a540-68fd-47eb-9123-5159d8eda653";

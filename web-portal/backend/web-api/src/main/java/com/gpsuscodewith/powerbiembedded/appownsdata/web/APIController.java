@@ -30,7 +30,7 @@ public class APIController {
     }
 
     @GetMapping(value = "/private-scoped")
-    public Message privateScopedEndpoint() {
-        return new Message("All good. You can see this because you are Authenticated with a Token granted the 'read:messages' scope");
+    public Message privateScopedEndpoint(Principal principal) {
+        return new Message("All good. You can see this because you are Authenticated with a Token granted the 'read:messages' scope.  Your username is " + principal.getName());
     }
 }

@@ -8,6 +8,8 @@ import java.util.List;
 public class EmbedConfig {
     public List<ReportConfig> embedReports;
 
+    public List<DatasetConfig> embedDatasets;
+
     public EmbedToken embedToken;
 
     public String errorMessage;

@@ -1,5 +1,5 @@
 import logo from './logo.svg';
-import './App.css';
+import '../app.css';
 import { useEffect, useState } from 'react';
 import { service, factories, models, IEmbedConfiguration } from "powerbi-client";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -17,16 +17,7 @@ const CreateReport = () => {
 
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
-    const callGetEmbedConfig = async () => {
-        try {
-          const pbiConfigResponse = await fetch(`${serverUrl}/datasets/${datasetId}/config`);
-          const pbiConfigResponseData = await pbiConfigResponse.json();
-
-          setEmbedConfig(pbiConfigResponseData);
-        } catch (error) {
-          setMessage(error.message);
-        }
-    };
+    
 
     const callCloneReport = async(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId) => {
         let data = {
@@ -36,7 +27,7 @@ const CreateReport = () => {
             reportName: reportName
         };
         try {
-          const clonedReportResponse = await fetch(`${serverUrl}/datasets/${datasetId}/config`, {
+          const clonedReportResponse = await fetch(`${serverUrl}/reports/${reportId}/clone`, {
               method: 'POST',
               mode: 'cors',
               headers: {
@@ -54,16 +45,30 @@ const CreateReport = () => {
     useEffect(() => {
         console.log('entered useEffect()');
 
-        callGetEmbedConfig();
+        const callGetEmbedConfig = async () => {
+       //     try {
+              const pbiConfigResponse = await fetch(`${serverUrl}/datasets/${datasetId}/config`);
+              const pbiConfigResponseData = await pbiConfigResponse.json();
+    
+              console.log('Inside callGetEmbedConfig. The response back was ' + pbiConfigResponseData);
+    
+              setEmbedConfig(pbiConfigResponseData);
+
+
+       //     } catch (error) {
+      //        setMessage(error.message);
+       //     }
+
+            console.log('After callGetEmbedConfig()');
 
         let reportContainer = document.getElementById("reportContainer");
         
         let embedCreateConfiguration = {
             type: "report",
             tokenType: 1,
-            accessToken: embedConfig.embedToken.token,
-            embedUrl: embedConfig.embedDatasets[0].createReportEmbedURL,
-            datasetId: embedConfig.embedDatasets[0].id,
+            accessToken: pbiConfigResponseData.embedToken.token,
+            embedUrl: pbiConfigResponseData.embedDatasets[0].createReportEmbedURL,
+            datasetId: pbiConfigResponseData.embedDatasets[0].id,
             permissions: models.Permissions.All,
             settings: {
               panes: {
@@ -106,11 +111,13 @@ const CreateReport = () => {
         } else {
             console.log('Report container was not found');
         }
-    });
+        };
+
+        callGetEmbedConfig();   
+    }, []);
     return (
         <div className="App">
           <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
             <div id="reportContainer" className="Embed-container">
             </div>
           </header>

@@ -6,6 +6,7 @@ const ExternalApi = () => {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [reports, setReports] = useState([]);
+  const [dataSets, setDatasets] = useState([]);
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   const { getAccessTokenSilently } = useAuth0();
@@ -71,6 +72,22 @@ const ExternalApi = () => {
     }
   }
 
+  const callGetUserDataSets = async() => {
+    try {
+      //const response = await fetch(`${serverUrl}/users/1/reports`);
+      //const responseData = await response.json();
+      const responseData = [
+        {
+          id: "19516b10-b7c4-408f-a6e2-c200fa45ee4a",
+          name: "SalesReportTemplate"
+        }
+      ]
+      setDatasets(responseData);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+
   return (
     <div className="container">
       <h1>External API</h1>
@@ -101,6 +118,13 @@ const ExternalApi = () => {
         >
           Get Reports
         </button>
+        <button
+        type="button"
+        className="btn btn-primary"
+        onClick={callGetUserDataSets}
+        >
+          Get Datasets
+        </button>
       </div>
       {message && (
         <div className="mt-5">
@@ -115,6 +139,9 @@ const ExternalApi = () => {
       <ul>
       {reports.map(report => (
         <li key={report.id}><Link to={`/reports/${report.id}`}>{report.reportName}</Link></li>
+      ))}
+      {dataSets.map(dataset => (
+        <li key={dataset.id}><Link to={`/datasets/${dataset.id}/f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3`}>{dataset.name}</Link></li>
       ))}
     </ul>
     </div>

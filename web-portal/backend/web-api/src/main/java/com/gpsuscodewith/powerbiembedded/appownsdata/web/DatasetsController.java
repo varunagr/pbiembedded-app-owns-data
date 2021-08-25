@@ -1,12 +1,14 @@
 package com.gpsuscodewith.powerbiembedded.appownsdata.web;
 
 //import com.azure.core.annotation.Delete;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gpsuscodewith.powerbiembedded.appownsdata.config.Config;
-import com.gpsuscodewith.powerbiembedded.appownsdata.domain.Dataset;
+import com.gpsuscodewith.powerbiembedded.appownsdata.domain.*;
 import com.gpsuscodewith.powerbiembedded.appownsdata.repositories.DatasetRepository;
 //import org.simpleframework.xml.Path;
 import com.gpsuscodewith.powerbiembedded.appownsdata.services.AzureADService;
 import com.gpsuscodewith.powerbiembedded.appownsdata.services.PowerBiService;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -39,6 +42,39 @@ public class DatasetsController {
     @GetMapping("/{id}")
     public Dataset getDataset(@PathVariable Long id) {
         return datasetRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
+
+    @GetMapping("{id}/config")
+    public EmbedConfig getDatasetConfig(@PathVariable String id) {
+        String accessToken = null;
+        try {
+            accessToken = AzureADService.getAccessToken();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        String workspacePbiIdentifier = Config.workspaceId;
+
+        ArrayList<String> datasetIds = new ArrayList<String>();
+        datasetIds.add(id);
+
+        ArrayList<String> reportIds = new ArrayList<String>();
+
+        try {
+            EmbedConfig embedConfig = PowerBiService.getReportEmbedConfig(accessToken, workspacePbiIdentifier, reportIds, datasetIds);
+          //  DatasetConfig datasetConfig = embedConfig.embedDatasets.get(0);
+            return embedConfig;
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     @PostMapping

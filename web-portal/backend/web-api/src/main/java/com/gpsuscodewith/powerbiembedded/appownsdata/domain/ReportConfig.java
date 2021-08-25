@@ -13,6 +13,8 @@ import com.gpsuscodewith.powerbiembedded.appownsdata.web.DatasetsController;
 public class ReportConfig {
     static final Logger logger = LoggerFactory.getLogger(DatasetsController.class);
 
+    public String id = "";
+
     public String reportId = "";
 
     public String embedUrl = "";

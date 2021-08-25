@@ -9,6 +9,7 @@ import ProtectedRoute from "./auth/protected-route";
 
 
 import "./app.css";
+import CreateReport from "./components/create-report";
 
 const App = () => {
   const { isLoading } = useAuth0();
@@ -26,6 +27,7 @@ const App = () => {
           <ProtectedRoute path="/profile" component={Profile} />
           <ProtectedRoute path="/external-api" component={ExternalApi} />
           <ProtectedRoute path="/reports/:reportId" component={Report} />
+          <ProtectedRoute path="/datasets/:datasetId/:workspaceId" component={CreateReport} />
         </Switch>
       </div>
       <Footer />

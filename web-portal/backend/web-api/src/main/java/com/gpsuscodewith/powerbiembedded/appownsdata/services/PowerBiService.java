@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gpsuscodewith.powerbiembedded.appownsdata.config.Config;
+import com.gpsuscodewith.powerbiembedded.appownsdata.domain.DatasetConfig;
 import com.gpsuscodewith.powerbiembedded.appownsdata.domain.EmbedConfig;
 import com.gpsuscodewith.powerbiembedded.appownsdata.domain.EmbedToken;
 import com.gpsuscodewith.powerbiembedded.appownsdata.domain.ReportConfig;
@@ -53,6 +54,85 @@ public class PowerBiService {
         throw new IllegalStateException("Power BI service class");
     }
 
+    public static EmbedConfig getEmbedConfig(String accessToken, String workspaceId, String reportId, ArrayList<String> additionalDatasetIds, ArrayList<String> additionalWorkspaces) throws JsonMappingException, JsonProcessingException, JSONException {
+        if (reportId == null || reportId.isEmpty()) {
+            throw new RuntimeException("Empty Report Id");
+        }
+        if (workspaceId == null || workspaceId.isEmpty()) {
+            throw new RuntimeException("Empty Workspace Id");
+        }
+
+        // Get Report In Group API: https://api.powerbi.com/v1.0/myorg/groups/{workspaceId}/reports/{reportId}
+        StringBuilder urlStringBuilder = new StringBuilder("https://api.powerbi.com/v1.0/myorg/groups/");
+        urlStringBuilder.append(workspaceId);
+        urlStringBuilder.append("/reports/");
+        urlStringBuilder.append(reportId);
+
+        // Request header
+        HttpHeaders reqHeader = new HttpHeaders();
+        reqHeader.put("Content-Type", Arrays.asList("application/json"));
+        reqHeader.put("Authorization", Arrays.asList("Bearer " + accessToken));
+
+        // HTTP entity object - holds header and body
+        HttpEntity<String> reqEntity = new HttpEntity<> (reqHeader);
+
+        // REST API URL to get report details
+        String endPointUrl = urlStringBuilder.toString();
+
+        // Rest API get report's details
+        RestTemplate getReportRestTemplate = new RestTemplate();
+        ResponseEntity<String> response = getReportRestTemplate.exchange(endPointUrl, HttpMethod.GET, reqEntity, String.class);
+
+        HttpHeaders responseHeader = response.getHeaders();
+        String responseBody = response.getBody();
+
+        // Create embedding configuration object
+        EmbedConfig reportEmbedConfig = new EmbedConfig();
+
+        // Create Object Mapper to convert String into Object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Convert responseBody string into ReportConfig class object
+        ReportConfig embedReport = mapper.readValue(responseBody, ReportConfig.class);
+
+        // Add embed config to client response object
+        reportEmbedConfig.embedReports = new ArrayList<ReportConfig>();
+        reportEmbedConfig.embedReports.add(embedReport);
+
+        if (Config.DEBUG) {
+
+            // Get the request Id
+            List<String> reqIdList = responseHeader.get("RequestId");
+
+            // Log progress
+            logger.info("Retrieved report details");
+
+            // Log Request Id
+            if (reqIdList != null && !reqIdList.isEmpty()) {
+                for (String reqId: reqIdList) {
+                    logger.info("Request Id: {}", reqId);
+                }
+            }
+        }
+
+        // Parse string into report object and get Report details
+        JSONObject responseObj = new JSONObject(responseBody);
+
+        // Create a list of DatasetIds
+        List<String> datasetIds = new ArrayList<String>();
+        datasetIds.add(responseObj.getString("datasetId"));
+
+        // Append to existing list of datasetIds to achieve dynamic binding later
+        for (String datasetId : additionalDatasetIds) {
+            datasetIds.add(datasetId);
+            System.out.println(datasetId);
+        }
+
+        // Get embed token
+        reportEmbedConfig.embedToken = PowerBiService.getEmbedToken(accessToken, reportId, datasetIds, (String[]) additionalWorkspaces.toArray());
+        return reportEmbedConfig;
+    }
     /**
      * Get embed params for a report for a single workspace
      * @param {string} accessToken
@@ -140,6 +220,123 @@ public class PowerBiService {
 
         // Get embed token
         reportEmbedConfig.embedToken = PowerBiService.getEmbedToken(accessToken, reportId, datasetIds);
+        return reportEmbedConfig;
+    }
+
+    public static EmbedConfig getReportEmbedConfig(String accessToken, String workspaceId, List<String> reportIds, List<String> datasetIds) throws JsonMappingException, JsonProcessingException, JSONException {
+       /*
+        if (datasetIds == null || datasetIds.isEmpty()) {
+            throw new RuntimeException("Empty Report Ids");
+        }
+        if (workspaceId == null || workspaceId.isEmpty()) {
+            throw new RuntimeException("Empty Workspace Id");
+        } */
+
+        // Create embedding configuration object
+        EmbedConfig reportEmbedConfig = new EmbedConfig();
+        reportEmbedConfig.embedReports = new ArrayList<ReportConfig>();
+        reportEmbedConfig.embedDatasets = new ArrayList<DatasetConfig>();
+
+        // Create a list of DatasetIds
+        //List<String> datasetIds = new ArrayList<String>();
+        for (String datasetId : datasetIds) {
+            // Get Report In Group API: https://api.powerbi.com/v1.0/myorg/groups/{workspaceId}/reports/{reportId}
+            StringBuilder urlStringBuilder = new StringBuilder("https://api.powerbi.com/v1.0/myorg/groups/");
+            urlStringBuilder.append("f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3");
+            urlStringBuilder.append("/datasets/");
+            urlStringBuilder.append(datasetId);
+
+            // Request header
+            HttpHeaders reqHeader = new HttpHeaders();
+            reqHeader.put("Content-Type", Arrays.asList("application/json"));
+            reqHeader.put("Authorization", Arrays.asList("Bearer " + accessToken));
+
+            // HTTP entity object - holds header and body
+            HttpEntity<String> reqEntity = new HttpEntity<> (reqHeader);
+
+            // REST API URL to get report details
+            String endPointUrl = urlStringBuilder.toString();
+
+            // Rest API get report's details
+            RestTemplate getReportRestTemplate = new RestTemplate();
+            ResponseEntity<String> response = getReportRestTemplate.exchange(endPointUrl, HttpMethod.GET, reqEntity, String.class);
+
+            HttpHeaders responseHeader = response.getHeaders();
+            String responseBody = response.getBody();
+
+            // Create Object Mapper to convert String into Object
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            // Convert responseBody string into ReportConfig class object
+       //     ReportConfig embedReport = mapper.readValue(responseBody, ReportConfig.class);
+            DatasetConfig embedDataset = mapper.readValue(responseBody, DatasetConfig.class);
+            reportEmbedConfig.embedDatasets.add(embedDataset);
+
+            // Add embed config to client response object
+       //     reportEmbedConfig.embedReports.add(embedReport);
+
+            if (Config.DEBUG) {
+
+                // Get the request Id
+                List<String> reqIdList = responseHeader.get("RequestId");
+
+                // Log progress
+                logger.info("Retrieved report details");
+
+                // Log Request Id
+                if (reqIdList != null && !reqIdList.isEmpty()) {
+                    for (String reqId: reqIdList) {
+                        logger.info("Request Id: {}", reqId);
+                    }
+                }
+            }
+
+            // Parse JSON and get Report details
+            JSONObject responseObj = new JSONObject(responseBody);
+
+            // Add datasetId in the datasetIds
+            //datasetIds.add(responseObj.getString("datasetId"));
+        }
+
+        for (String reportId : reportIds) {
+            // Get Report In Group API: https://api.powerbi.com/v1.0/myorg/groups/{workspaceId}/reports/{reportId}
+            StringBuilder urlStringBuilder = new StringBuilder("https://api.powerbi.com/v1.0/myorg/groups/");
+            urlStringBuilder.append(workspaceId);
+            urlStringBuilder.append("/reports/");
+            urlStringBuilder.append(reportId);
+
+            // Request header
+            HttpHeaders reqHeader = new HttpHeaders();
+            reqHeader.put("Content-Type", Arrays.asList("application/json"));
+            reqHeader.put("Authorization", Arrays.asList("Bearer " + accessToken));
+
+            // HTTP entity object - holds header and body
+            HttpEntity<String> reqEntity = new HttpEntity<> (reqHeader);
+
+            // REST API URL to get report details
+            String endPointUrl = urlStringBuilder.toString();
+
+            // Rest API get report's details
+            RestTemplate getReportRestTemplate = new RestTemplate();
+            ResponseEntity<String> response = getReportRestTemplate.exchange(endPointUrl, HttpMethod.GET, reqEntity, String.class);
+
+            HttpHeaders responseHeader = response.getHeaders();
+            String responseBody = response.getBody();
+
+            // Create Object Mapper to convert String into Object
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+            // Convert responseBody string into ReportConfig class object
+            //     ReportConfig embedReport = mapper.readValue(responseBody, ReportConfig.class);
+            ReportConfig embedReport = mapper.readValue(responseBody, ReportConfig.class);
+            reportEmbedConfig.embedReports.add(embedReport);
+        }
+
+        // Get embed token
+        reportEmbedConfig.embedToken = PowerBiService.getEmbedToken(accessToken, reportIds, datasetIds,"6e5482de-8849-4ec2-b432-0939f3a15f31",  "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3");
+        //reportEmbedConfig.embedToken = PowerBiService.getCreateReportEmbedToken(accessToken, workspaceId, datasetIds.get(0));
         return reportEmbedConfig;
     }
 
@@ -370,8 +567,11 @@ public class PowerBiService {
         // Request body
         JSONObject requestBody = new JSONObject();
         requestBody.put("datasets", jsonDatasets);
-        requestBody.put("reports", jsonReports);
+    //    requestBody.put("reports", jsonReports);
         requestBody.put("targetWorkspaces", jsonWorkspaces);
+        // newly added
+       // requestBody.put("accessLevel", "Create");
+      //  requestBody.put("allowSaveAs", "true");
 
         // Add (body, header) to HTTP entity
         HttpEntity<String> httpEntity = new HttpEntity<> (requestBody.toString(), headers);
@@ -404,6 +604,93 @@ public class PowerBiService {
             }
         }
         return embedToken;
+    }
+
+    public static EmbedToken getCreateReportEmbedToken(String accessToken, String workspaceId, String datasetId) throws JSONException, JsonProcessingException {
+        final String uri = "https://api.powerbi.com/v1.0/myorg/groups/" + workspaceId + "/reports/GenerateToken";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Create request header
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Content-Type", Arrays.asList("application/json"));
+        headers.put("Authorization", Arrays.asList("Bearer " + accessToken));
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("accessLevel", "Create");
+        requestBody.put("allowSaveAs", "true");
+        requestBody.put("datasetId", datasetId);
+
+        // Add (body, header) to HTTP entity
+        HttpEntity<String> httpEntity = new HttpEntity<> (requestBody.toString(), headers);
+
+        // Call the API
+        ResponseEntity<String> response = restTemplate.postForEntity(uri, httpEntity, String.class);
+        HttpHeaders responseHeader = response.getHeaders();
+        String responseBody = response.getBody();
+
+        // Create Object Mapper to convert String into Object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Convert responseBody string into EmbedToken class object
+        EmbedToken embedToken = mapper.readValue(responseBody, EmbedToken.class);
+
+        if (Config.DEBUG) {
+
+            // Get the request Id
+            List<String> reqIdList = responseHeader.get("RequestId");
+
+            // Log progress
+            logger.info("Retrieved Embed token\nEmbed Token Id: {}", embedToken.tokenId);
+
+            // Log Request Id
+            if (reqIdList != null && !reqIdList.isEmpty()) {
+                for (String reqId: reqIdList) {
+                    logger.info("Request Id: {}", reqId);
+                }
+            }
+        }
+        return embedToken;
+    }
+
+    public static ReportConfig cloneReport(
+            String accessToken,
+            String sourceWorkspaceId,
+            String reportId,
+            String reportName,
+            String targetWorkspaceId) throws JSONException, JsonProcessingException {
+
+        logger.info("Inside cloneReport");
+        final String uri = "https://api.powerbi.com/v1.0/myorg/groups/" + sourceWorkspaceId + "/reports/" + reportId + "/Clone";
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        // Create request header
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Content-Type", Arrays.asList("application/json"));
+        headers.put("Authorization", Arrays.asList("Bearer " + accessToken));
+
+        // Request body
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("name", reportName);
+        requestBody.put("targetWorkspaceId", targetWorkspaceId);
+
+        // Add (body, header) to HTTP entity
+        HttpEntity<String> httpEntity = new HttpEntity<> (requestBody.toString(), headers);
+
+        //ResponseEntity<String> response = getReportRestTemplate.exchange(endPointUrl, HttpMethod.GET, reqEntity, String.class);
+        // Call the API
+        ResponseEntity<String> response = restTemplate.postForEntity(uri, httpEntity, String.class);
+        HttpHeaders responseHeader = response.getHeaders();
+        String responseBody = response.getBody();
+
+        // Create Object Mapper to convert String into Object
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        ReportConfig clonedReport = mapper.readValue(responseBody, ReportConfig.class);
+
+        return clonedReport;
     }
 
     /**
@@ -445,6 +732,11 @@ public class PowerBiService {
 
         // Request body
         JSONObject requestBody = new JSONObject();
+
+        // newly added for create report
+        requestBody.put("accessLevel", "Create");
+        requestBody.put("allowSaveAs", "true");
+
         requestBody.put("datasets", jsonDatasets);
         requestBody.put("reports", jsonReports);
 

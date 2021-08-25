@@ -68,7 +68,7 @@ public class ReportController {
 
         Report report = new Report();
         report.setReportName(reportConfig.reportName);
-        report.setPbiIdentifier(reportConfig.reportId);
+        report.setPbiIdentifier(reportConfig.id);
         report.setAccessToken(reportConfig.accessToken);
         report.setEmbedUrl(reportConfig.embedUrl);
         return report;
@@ -123,7 +123,7 @@ public class ReportController {
     }
 
     @GetMapping("/{reportId}/pbiconfig")
-    public Report getNewSaveReportConfig(@PathVariable Long reportId) {/*
+    public Report getNewSaveReportConfig(@PathVariable String reportId) {/*
         Report report = reportRepository.findById(reportId).get();
 
         WorkspaceReport workspaceReport = workspaceReportRepository
@@ -149,10 +149,12 @@ public class ReportController {
         //String reportPbiIdentifier = report.getPbiIdentifier();
         //String workspacePbiIdentifier = workspace.getPbiIdentifier();
         String workspacePbiIdentifier = Config.workspaceId;
-        String reportPbiIdentifier = Config.reportId;
+        workspacePbiIdentifier = "6e5482de-8849-4ec2-b432-0939f3a15f31";
+        //String reportPbiIdentifier = Config.reportId;
+        String reportPbiIdentifier = reportId;
 
         ArrayList<String> reportIds = new ArrayList<String>();
-     //   reportIds.add(reportId.toString());
+        reportIds.add(reportPbiIdentifier);
 
         ArrayList<String> datasetIds = new ArrayList<String>();
         datasetIds.add("19516b10-b7c4-408f-a6e2-c200fa45ee4a");
@@ -169,7 +171,7 @@ public class ReportController {
 
             Report report = new Report();
             report.setAccessToken(embedConfig.embedToken.token);
-            report.setPbiIdentifier("19516b10-b7c4-408f-a6e2-c200fa45ee4a");
+            report.setPbiIdentifier(reportPbiIdentifier);
             report.setEmbedUrl(reportConfig.embedUrl);
             return report;
         } catch (JsonProcessingException e) {

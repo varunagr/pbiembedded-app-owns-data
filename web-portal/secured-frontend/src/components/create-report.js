@@ -3,7 +3,7 @@ import '../app.css';
 import { useEffect, useState } from 'react';
 import { service, factories, models, IEmbedConfiguration } from "powerbi-client";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 const CreateReport = () => {
@@ -12,12 +12,10 @@ const CreateReport = () => {
     const [embedConfig, setEmbedConfig] = useState({});
     const [clonedReport, setClonedReport] = useState({});
     const [message, setMessage] = useState("");
+    const history = useHistory();
     
     const { datasetId, workspaceId } = useParams();
-
     const serverUrl = process.env.REACT_APP_SERVER_URL;
-
-    
 
     const callCloneReport = async(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId) => {
         let data = {
@@ -35,8 +33,12 @@ const CreateReport = () => {
               },
               body: JSON.stringify(data)
           });
+          console.log('Got the clone response with a value of ' + clonedReportResponse);
           const clonedReportResponseData = await clonedReportResponse.json();
-          setClonedReport(clonedReportResponseData);
+          console.log('Got the json value of ' + clonedReportResponseData);
+          console.log('The new report id is ' + clonedReportResponseData.pbiIdentifier);
+          history.push(`/reports/${clonedReportResponseData.pbiIdentifier}`);
+         // setClonedReport(clonedReportResponseData);
         } catch (error) {
           setMessage(error.message);
         }
@@ -107,6 +109,8 @@ const CreateReport = () => {
                 callCloneReport(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId);
 
                 // delete origional when unloading component if the clone was successful
+                
+
             });
         } else {
             console.log('Report container was not found');

@@ -39,6 +39,8 @@ const Report = () => {
             embedUrl: reportConfig.embedUrl,
             accessToken: reportConfig.accessToken,
             tokenType: models.TokenType.Embed,
+            permissions: models.Permissions.All,
+            viewMode: models.ViewMode.View,
             settings: {
               panes: {
                 filters: {

@@ -780,7 +780,7 @@ public class PowerBiService {
         return embedToken;
     }
 
-    public static String importFile(String accessToken, String filePath) throws UnsupportedOperationException, IOException {
+    public static DatasetConfig importFile(String accessToken, String filePath) throws UnsupportedOperationException, IOException {
         String bearer = "Bearer " + accessToken;
         //String fileName = "SalesReportTemplate.pbix";
         String fileName = Paths.get(filePath).getFileName().toString();
@@ -822,6 +822,11 @@ public class PowerBiService {
             result.append( line );
         }
 
-        return result.toString();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Convert responseBody string into EmbedToken class object
+        DatasetConfig datasetConfig = mapper.readValue(result.toString(), DatasetConfig.class);
+        return datasetConfig;
     }
 }

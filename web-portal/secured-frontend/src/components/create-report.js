@@ -37,6 +37,7 @@ const CreateReport = () => {
           const clonedReportResponseData = await clonedReportResponse.json();
           console.log('Got the json value of ' + clonedReportResponseData);
           console.log('The new report id is ' + clonedReportResponseData.pbiIdentifier);
+          // delete the origional report with the passed in reportId
           history.push(`/reports/${clonedReportResponseData.pbiIdentifier}`);
          // setClonedReport(clonedReportResponseData);
         } catch (error) {
@@ -107,10 +108,6 @@ const CreateReport = () => {
                 let sourceWorkspaceId = "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3";
                 let destinationWorkspaceId = "6e5482de-8849-4ec2-b432-0939f3a15f31";
                 callCloneReport(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId);
-
-                // delete origional when unloading component if the clone was successful
-                
-
             });
         } else {
             console.log('Report container was not found');

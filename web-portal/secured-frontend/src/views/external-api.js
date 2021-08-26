@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 const ExternalApi = () => {
   const [message, setMessage] = useState("");
   const [users, setUsers] = useState([]);
   const [reports, setReports] = useState([]);
   const [dataSets, setDatasets] = useState([]);
+  const history = useHistory();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
   const { getAccessTokenSilently } = useAuth0();
+
+  const callAdmin = () => {
+    history.push("/admin");
+  };
 
   const callApi = async () => {
     try {
@@ -78,8 +83,8 @@ const ExternalApi = () => {
       //const responseData = await response.json();
       const responseData = [
         {
-          id: "19516b10-b7c4-408f-a6e2-c200fa45ee4a",
-          name: "SalesReportTemplate"
+          id: "714dbd7d-cde7-43bd-8b28-0b06f3f8285f",
+          name: "Weather"
         }
       ]
       setDatasets(responseData);
@@ -124,6 +129,13 @@ const ExternalApi = () => {
         onClick={callGetUserDataSets}
         >
           Get Datasets
+        </button>
+        <button
+        type="button"
+        className="btn btn-primary"
+        onClick={callAdmin}
+        >
+          Admin
         </button>
       </div>
       {message && (

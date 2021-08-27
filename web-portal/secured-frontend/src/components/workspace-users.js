@@ -4,7 +4,7 @@ import { useHistory, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import '../app.css';
 
-const TenantUsers = () => {
+const WorkspaceUsers = () => {
 }
 
-export default TenantUsers;
+export default WorkspaceUsers;

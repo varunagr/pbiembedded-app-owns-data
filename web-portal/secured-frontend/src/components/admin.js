@@ -8,6 +8,7 @@ const Admin = () => {
     const [message, setMessage] = useState("");
     const [tenants, setTenants] = useState([]);
     const [showTenants, setShowTenants] = useState(false);
+    const [showWorkspaces, setShowWorkspaces] = useState(false);
     const [workspaces, setWorkspaces] = useState([]);
     const history = useHistory();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -21,6 +22,7 @@ const Admin = () => {
           console.log('Got the responseData inside callTenants');
     
           setTenants(responseData);
+          setShowWorkspaces(false);
           setShowTenants(true);
         } catch (error) {
           setMessage(error.message);
@@ -31,13 +33,19 @@ const Admin = () => {
         history.push('./tenants');
       };
 
+      const callNavigateWorkspaces = () => {
+        history.push('./workspaces');
+      }
+
       const callWorkspaces = async () => {
         try {
           const response = await fetch(`${serverUrl}/workspaces`);
-    
+          console.log('Got respons back from workspaces');
           const responseData = await response.json();
-    
+          console.log('Thre responseData from callWorkspaces is ' + responseData);
           setWorkspaces(responseData);
+          setShowTenants(false);
+          setShowWorkspaces(true);
         } catch (error) {
           setMessage(error.message);
         }
@@ -87,6 +95,24 @@ const Admin = () => {
                 <ul>
                     {tenants.map(tenant => (
                         <li key={tenant.id}><Link to={`/tenants/${tenant.id}`}>{tenant.tenantName}</Link></li>
+                    ))}
+                    {workspaces.map(workspace => (
+                        <li key={workspace.id}><Link to={`/workspaces/${workspace.id}`}>{workspace.workspaceName}</Link></li>
+                    ))}
+                </ul>
+                </div>
+              </div>
+          )}
+          {showWorkspaces && (
+            <div>
+                <div>Workspaces</div>
+                <div>
+                    <button type="button" className="btn btn-primary" onClick={callNavigateWorkspaces}>Add Workspace</button>
+                </div>
+                <div>
+                <ul>
+                    {tenants.map(workspsace => (
+                        <li key={workspsace.id}><Link to={`/workspaces/${workspsace.id}`}>{workspsace.tenantName}</Link></li>
                     ))}
                     {workspaces.map(workspace => (
                         <li key={workspace.id}><Link to={`/workspaces/${workspace.id}`}>{workspace.workspaceName}</Link></li>

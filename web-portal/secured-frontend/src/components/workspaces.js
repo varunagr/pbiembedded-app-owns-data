@@ -4,9 +4,10 @@ import { useHistory, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import '../app.css';
 
-const Tenants = () => {
+const Workspaces = () => {
     const [message, setMessage] = useState("");
     const [showDiv, setShowDiv] = useState(false);
+    const [workspaceName, setWorkspaceName] = useState("");
     const [tenantName, setTenantName] = useState("");
     const history = useHistory();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -14,10 +15,24 @@ const Tenants = () => {
     const callShowDiv = async () => {
         setShowDiv(!showDiv);    
     };
-    
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         try {
+            let data = {
+                tenantName: tenantName
+            };
+            const createTenantResponse = await fetch(`${serverUrl}/tenants`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            console.log('createTenantResponse is ' + createTenantResponse);
+            const createTenantResponseData = await createTenantResponse.json();
+            console.log('createTenantResponseData is ' + createTenantResponseData);
+
             let pbiWorkspaceData = {
                 workspaceLocation: "eastus",
                 workspaceName: tenantName
@@ -50,7 +65,7 @@ const Tenants = () => {
                 className="btn btn-primary"
                 onClick={callShowDiv}
                 >
-                Show
+                Hark
             </button>
             </div>
             {showDiv &&
@@ -58,13 +73,17 @@ const Tenants = () => {
                 <form onSubmit={handleSubmit}>
                 <label>
                     Tenant Name:
-                    <input type="text" value={tenantName} onChange={e => setTenantName(e.target.value)} />
+                    <input type="text" value={workspaceName} onChange={e => setTenantName(e.target.value)} />
+                </label>
+                <label>
+                    Workspace Name:
+                    <input type="text" value={workspaceName} onChange={e => setWorkspaceName(e.target.value)} />
                 </label>
                     <input type="submit" value="Submit" />
                 </form>
             </div>}
         </div>
     );
-};
+}
 
-export default Tenants;
+export default Workspaces;

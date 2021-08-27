@@ -1,8 +1,13 @@
 package com.gpsuscodewith.powerbiembedded.appownsdata.web;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.gpsuscodewith.powerbiembedded.appownsdata.domain.Dataset;
+import com.gpsuscodewith.powerbiembedded.appownsdata.domain.GroupConfig;
 import com.gpsuscodewith.powerbiembedded.appownsdata.domain.PbiWorkspace;
 import com.gpsuscodewith.powerbiembedded.appownsdata.repositories.PbiWorkspaceRepository;
+import com.gpsuscodewith.powerbiembedded.appownsdata.services.AzureADService;
+import com.gpsuscodewith.powerbiembedded.appownsdata.services.PowerBiService;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -34,7 +39,24 @@ public class PbiWorkspaceController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PbiWorkspace createPbiWorkspace(@RequestBody PbiWorkspace pbiWorkspace) {
+    public PbiWorkspace createPbiWorkspace(@RequestBody PbiWorkspace pbiWorkspace) throws JSONException, JsonProcessingException {
+        String accessToken = null;
+        try {
+            accessToken = AzureADService.getAccessToken();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        GroupConfig groupConfig = PowerBiService.createGroup(accessToken, pbiWorkspace.getWorkspaceName());
+        pbiWorkspace.setPbiIdentifier(groupConfig.getId());
+        String addUserResponse = PowerBiService.addUserToGroup(
+                accessToken,
+                pbiWorkspace.getPbiIdentifier(),
+                "admin@bobjacsamples.onmicrosoft.com",
+                "Admin");
         return pbiWorkspaceRepository.save(pbiWorkspace);
     }
 }

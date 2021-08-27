@@ -5,6 +5,15 @@ public class GroupConfig {
     private String capacityId;
     private String description;
     private String name;
+    private boolean isDedicatedCapacity;
+
+    public boolean isDedicatedCapacity() {
+        return isDedicatedCapacity;
+    }
+
+    public void setDedicatedCapacity(boolean dedicatedCapacity) {
+        isDedicatedCapacity = dedicatedCapacity;
+    }
 
     public String getDescription() {
         return description;

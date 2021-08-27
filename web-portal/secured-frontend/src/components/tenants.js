@@ -34,7 +34,7 @@ const Tenants = () => {
             const createPbiWorkspaceResponseData = await createPbiWorkspaceResponse.json();
             console.log('createPbiWorkspaceResponseData is ' + createPbiWorkspaceResponseData);
 
-            history.push("./admin");
+      //      history.push("./admin");
         } catch (error) {
             setMessage(error.message);
         }

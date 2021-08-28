@@ -79,8 +79,6 @@ public class DatasetsController {
 
     @PostMapping
     public ResponseEntity createDataset(@RequestBody Dataset dataset) throws URISyntaxException, IOException {
-        Dataset savedDataset = datasetRepository.save(dataset);
-
         // Get access token
         String accessToken;
         try {
@@ -99,7 +97,11 @@ public class DatasetsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(interruptedEx.getMessage());
         }
 
-        String result = PowerBiService.importFile(accessToken, Config.datasetFilePath);
+        DatasetConfig result = PowerBiService.importFile(accessToken, Config.datasetFilePath);
+
+        // call get report in group and grab dataset id from response
+        dataset.setPbiId(result.getId());
+        Dataset savedDataset = datasetRepository.save(dataset);
 
         return ResponseEntity.created(new URI("/datasets/" + savedDataset.getId())).body(savedDataset);
     }

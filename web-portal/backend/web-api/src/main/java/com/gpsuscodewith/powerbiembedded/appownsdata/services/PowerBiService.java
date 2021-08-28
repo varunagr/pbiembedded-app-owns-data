@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gpsuscodewith.powerbiembedded.appownsdata.config.Config;
-import com.gpsuscodewith.powerbiembedded.appownsdata.domain.DatasetConfig;
-import com.gpsuscodewith.powerbiembedded.appownsdata.domain.EmbedConfig;
-import com.gpsuscodewith.powerbiembedded.appownsdata.domain.EmbedToken;
-import com.gpsuscodewith.powerbiembedded.appownsdata.domain.ReportConfig;
+import com.gpsuscodewith.powerbiembedded.appownsdata.domain.*;
 import com.gpsuscodewith.powerbiembedded.appownsdata.services.AzureADService;
 
 import java.io.BufferedReader;
@@ -654,6 +651,55 @@ public class PowerBiService {
         return embedToken;
     }
 
+    public static GroupConfig createGroup(String accessToken, String groupName) throws JSONException, JsonProcessingException {
+        final String uri = "https://api.powerbi.com/v1.0/myorg/groups";
+
+        RestTemplate restTemplate = new RestTemplate();
+        // Create request header
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Content-Type", Arrays.asList("application/json"));
+        headers.put("Authorization", Arrays.asList("Bearer " + accessToken));
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("name", groupName);
+
+        // Add (body, header) to HTTP entity
+        HttpEntity<String> httpEntity = new HttpEntity<> (requestBody.toString(), headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(uri, httpEntity, String.class);
+        HttpHeaders responseHeader = response.getHeaders();
+        String responseBody = response.getBody();
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        GroupConfig group = mapper.readValue(responseBody, GroupConfig.class);
+
+        return group;
+    }
+
+    public static String addUserToGroup(String accessToken, String groupId, String emailAddress, String groupUserAccessRights) throws JSONException {
+        final String uri = "https://api.powerbi.com/v1.0/myorg/groups/" + groupId + "/users";
+
+        RestTemplate restTemplate = new RestTemplate();
+        // Create request header
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Content-Type", Arrays.asList("application/json"));
+        headers.put("Authorization", Arrays.asList("Bearer " + accessToken));
+
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("groupUserAccessRight", groupUserAccessRights);
+        requestBody.put("emailAddress", emailAddress);
+
+        // Add (body, header) to HTTP entity
+        HttpEntity<String> httpEntity = new HttpEntity<> (requestBody.toString(), headers);
+
+        ResponseEntity<String> response = restTemplate.postForEntity(uri, httpEntity, String.class);
+        HttpHeaders responseHeader = response.getHeaders();
+        String responseBody = response.getBody();
+
+        return responseBody;
+    }
+
     public static ReportConfig cloneReport(
             String accessToken,
             String sourceWorkspaceId,
@@ -780,7 +826,9 @@ public class PowerBiService {
         return embedToken;
     }
 
-    public static String importFile(String accessToken, String filePath) throws UnsupportedOperationException, IOException {
+
+
+    public static DatasetConfig importFile(String accessToken, String filePath) throws UnsupportedOperationException, IOException {
         String bearer = "Bearer " + accessToken;
         //String fileName = "SalesReportTemplate.pbix";
         String fileName = Paths.get(filePath).getFileName().toString();
@@ -822,6 +870,11 @@ public class PowerBiService {
             result.append( line );
         }
 
-        return result.toString();
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Convert responseBody string into EmbedToken class object
+        DatasetConfig datasetConfig = mapper.readValue(result.toString(), DatasetConfig.class);
+        return datasetConfig;
     }
 }

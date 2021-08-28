@@ -14,6 +14,15 @@ public class PbiWorkspace {
     private String workspaceLocation;
     private String workspaceName;
     private String pbiIdentifier;
+    private Long tenantId;
+
+    public Long getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(Long tenantId) {
+        this.tenantId = tenantId;
+    }
 
     public Long getId() {
         return id;

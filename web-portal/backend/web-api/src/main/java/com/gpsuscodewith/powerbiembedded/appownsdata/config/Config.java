@@ -40,7 +40,7 @@ public abstract class Config {
     public static final String authorityUrl = "https://login.microsoftonline.com/";
     public static final String scopeUrl = "https://analysis.windows.net/powerbi/api/.default";
 
-    public static final String datasetFilePath = "/Users/bobjacobs/work/src/github.com/gpsuscodewith/pbiembedded-app-owns-data/web-portal/backend/web-api/src/main/resources/SalesReportTemplate.pbix";
+    public static final String datasetFilePath = "/Users/bobjacobs/work/src/github.com/gpsuscodewith/pbiembedded-app-owns-data/web-portal/backend/web-api/src/main/resources/API_POC.pbix";
 
 
     private Config() {

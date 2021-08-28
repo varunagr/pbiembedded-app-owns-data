@@ -17,6 +17,8 @@ public class Dataset {
 
     private String pbiWorkspace;
 
+    private String pbiId;
+
     private String dataSetName;
 
     private String createdBy;
@@ -53,6 +55,14 @@ public class Dataset {
 
     public void setDataSetName(String dataSetName) {
         this.dataSetName = dataSetName;
+    }
+
+    public String getPbiId() {
+        return pbiId;
+    }
+
+    public void setPbiId(String pbiId) {
+        this.pbiId = pbiId;
     }
 
     public String getCreatedBy() {

@@ -12,6 +12,7 @@ const Admin = () => {
     const [showUsers, setShowUsers] = useState(false);
     const [showWorkspaces, setShowWorkspaces] = useState(false);
     const [showWorkspaceUsers, setShowWorkspaceUsers] = useState(false);
+    const [showWorkspaceReports, setShowWorkspaceReports] = useState(false);
     const [workspaces, setWorkspaces] = useState([]);
     const history = useHistory();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -49,6 +50,10 @@ const Admin = () => {
       const callNavigateWorkspaceUsers = () => {
           history.push('./workspaceusers');
       }
+
+      const callNavigateWorkspaceReports = () => {
+        history.push('./workspace-reports');
+    }
 
       const callWorkspaces = async () => {
         try {
@@ -207,6 +212,21 @@ const Admin = () => {
                 <ul>
                     {users.map(workspaceUser => (
                         <li key={workspaceUser.id}><Link to={`/users/${workspaceUser.id}`}>{workspaceUser.userId}/{workspaceUser.workspaceId}</Link></li>
+                    ))}
+                </ul>
+                </div>
+              </div>
+          )}
+          {showWorkspaceReports && (
+            <div>
+                <div>Users</div>
+                <div>
+                    <button type="button" className="btn btn-primary" onClick={callNavigateWorkspaceReports}>Add Workspace Reports</button>
+                </div>
+                <div>
+                <ul>
+                    {users.map(workspaceReport => (
+                        <li key={workspaceReport.id}><Link to={`/workspace-reports/${workspaceReport.id}`}>{workspaceReport.workspaceId}/{workspaceReport.reportId}</Link></li>
                     ))}
                 </ul>
                 </div>

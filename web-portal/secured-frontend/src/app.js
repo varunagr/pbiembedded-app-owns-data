@@ -16,6 +16,7 @@ import Workspaces from "./components/workspaces";
 import WorkspaceUsers from "./components/workspace-users";
 import Users from "./components/users";
 import WorkspaceReports from "./components/workspace-reports";
+import Datasets from "./components/datasets";
 
 const App = () => {
   const { isLoading } = useAuth0();
@@ -40,6 +41,7 @@ const App = () => {
           <ProtectedRoute path="/workspace-reports" component={WorkspaceReports} />
           <ProtectedRoute path="/reports/:reportId" component={Report} />
           <ProtectedRoute path="/datasets/:datasetId/:workspaceId" component={CreateReport} />
+          <ProtectedRoute path="/datasets" component={Datasets} />
         </Switch>
       </div>
       <Footer />

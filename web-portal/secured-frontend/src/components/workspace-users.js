@@ -15,8 +15,6 @@ const WorkspaceUsers = () => {
 
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
-    console.log('Got the reportId from the params ' + workspaceId);
-
     const callShowNewUser = () => {
         setShowNewWorkspaceUser(true);    
     };

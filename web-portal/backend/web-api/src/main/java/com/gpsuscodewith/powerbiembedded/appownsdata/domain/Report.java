@@ -11,6 +11,7 @@ public class Report {
     @Id
     @GeneratedValue
     private Long id;
+    private Long dataSetId;
     private String reportName;
     private Long workspaceId;
     private String pbiIdentifier;
@@ -63,5 +64,13 @@ public class Report {
 
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public Long getDataSetId() {
+        return dataSetId;
+    }
+
+    public void setDataSetId(Long dataSetId) {
+        this.dataSetId = dataSetId;
     }
 }

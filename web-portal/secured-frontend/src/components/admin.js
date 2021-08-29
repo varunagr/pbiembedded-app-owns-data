@@ -12,6 +12,8 @@ const Admin = () => {
     const [showUsers, setShowUsers] = useState(false);
     const [showWorkspaces, setShowWorkspaces] = useState(false);
     const [showWorkspaceUsers, setShowWorkspaceUsers] = useState(false);
+    const [showWorkspaceReports, setShowWorkspaceReports] = useState(false);
+    const [showDatasets, setShowDatasets] = useState(false);
     const [workspaces, setWorkspaces] = useState([]);
     const history = useHistory();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -25,9 +27,7 @@ const Admin = () => {
           console.log('Got the responseData inside callTenants');
     
           setTenants(responseData);
-          setShowWorkspaces(false);
-          setShowUsers(false);
-          setShowWorkspaceUsers(false);
+          showNone();
           setShowTenants(true);
         } catch (error) {
           setMessage(error.message);
@@ -50,6 +50,23 @@ const Admin = () => {
           history.push('./workspaceusers');
       }
 
+      const callNavigateWorkspaceReports = () => {
+        history.push('./workspace-reports');
+      }
+
+      const callNavigateDatasets = () => {
+        history.push('./datasets');
+      }
+
+      const showNone = () => {
+        setShowTenants(false);
+        setShowUsers(false); 
+        setShowWorkspaces(false);
+        setShowWorkspaceUsers(false);
+        setShowWorkspaceReports(false);
+        setShowDatasets(false);
+      }
+
       const callWorkspaces = async () => {
         try {
           const response = await fetch(`${serverUrl}/workspaces`);
@@ -57,9 +74,7 @@ const Admin = () => {
           const responseData = await response.json();
           console.log('Thre responseData from callWorkspaces is ' + responseData);
           setWorkspaces(responseData);
-          setShowTenants(false);
-          setShowUsers(true);
-          setShowWorkspaceUsers(false);
+          showNone();
           setShowWorkspaces(true);
         } catch (error) {
           setMessage(error.message);
@@ -73,9 +88,7 @@ const Admin = () => {
           const responseData = await response.json();
           console.log('Thre responseData from callWorkspaceUsers is ' + responseData);
           setWorkspaces(responseData);
-          setShowTenants(false);
-          setShowWorkspaces(false);
-          setShowUsers(false);
+          showNone();
           setShowWorkspaceUsers(true);
         } catch (error) {
           setMessage(error.message);
@@ -88,10 +101,9 @@ const Admin = () => {
             console.log('Got respons back from users');
             const responseData = await response.json();
             console.log('Thre responseData from callUsers is ' + responseData);
+            console.log('The email address is ' + responseData.email);
             setUsers(responseData);
-            setShowTenants(false);
-            setShowWorkspaces(false);
-            setShowWorkspaceUsers(false);
+            showNone();
             setShowUsers(true);
           } catch (error) {
             setMessage(error.message);
@@ -191,7 +203,7 @@ const Admin = () => {
                 <div>
                 <ul>
                     {users.map(user => (
-                        <li key={user.id}><Link to={`/users/${user.id}`}>{user.emailAddress}</Link></li>
+                        <li key={user.id}><Link to={`/users/${user.id}`}>{user.id} / {user.email}</Link></li>
                     ))}
                 </ul>
                 </div>
@@ -207,6 +219,36 @@ const Admin = () => {
                 <ul>
                     {users.map(workspaceUser => (
                         <li key={workspaceUser.id}><Link to={`/users/${workspaceUser.id}`}>{workspaceUser.userId}/{workspaceUser.workspaceId}</Link></li>
+                    ))}
+                </ul>
+                </div>
+              </div>
+          )}
+          {showWorkspaceReports && (
+            <div>
+                <div>Users</div>
+                <div>
+                    <button type="button" className="btn btn-primary" onClick={callNavigateWorkspaceReports}>Add Workspace Reports</button>
+                </div>
+                <div>
+                <ul>
+                    {users.map(workspaceReport => (
+                        <li key={workspaceReport.id}><Link to={`/workspace-reports/${workspaceReport.id}`}>{workspaceReport.workspaceId}/{workspaceReport.reportId}</Link></li>
+                    ))}
+                </ul>
+                </div>
+              </div>
+          )}
+          {showDatasets && (
+            <div>
+                <div>Datasets</div>
+                <div>
+                    <button type="button" className="btn btn-primary" onClick={callNavigateDatasets}>Add Datasets</button>
+                </div>
+                <div>
+                <ul>
+                    {users.map(dataSet => (
+                        <li key={dataSet.id}><Link to={`/datasets/${dataSet.id}`}>{dataSet.dataSetName}</Link></li>
                     ))}
                 </ul>
                 </div>

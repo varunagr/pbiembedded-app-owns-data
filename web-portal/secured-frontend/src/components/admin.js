@@ -10,7 +10,7 @@ const Admin = () => {
     const [tenants, setTenants] = useState([]);
     const [users, setUsers] = useState([]);
     const [workspaceUsers, setWorkspaceUsers] = useState({});
-    const [dataSets, setDatasets] = useData({});
+    const [dataSets, setDatasets] = useState({});
 
     const [showTenants, setShowTenants] = useState(false);
     const [showUsers, setShowUsers] = useState(false);
@@ -193,7 +193,7 @@ const Admin = () => {
                 <div>
                 <ul>
                     {tenants.map(tenant => (
-                        <li key={tenant.id}><Link to={`/tenants/${tenant.id}`}>{tenant.tenantName}</Link></li>
+                        <li key={tenant.id}><Link to={`/tenants/${tenant.id}`}>{tenant.id} - {tenant.tenantName}</Link></li>
                     ))}
                 </ul>
                 </div>
@@ -268,7 +268,7 @@ const Admin = () => {
                 <div>
                 <ul>
                     {users.map(dataSet => (
-                        <li key={dataSet.id}><Link to={`/datasets/${dataSet.id}`}>{dataSet.dataSetName}</Link></li>
+                        <li key={dataSet.id}><Link to={`/datasets/${dataSet.id}`}>{dataSet.pbiWorkspace} - {dataSet.dataSetName}</Link></li>
                     ))}
                 </ul>
                 </div>

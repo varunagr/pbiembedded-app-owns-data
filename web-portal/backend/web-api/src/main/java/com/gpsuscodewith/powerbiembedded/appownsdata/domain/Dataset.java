@@ -15,6 +15,8 @@ public class Dataset {
 
     private Long tenantId;
 
+    private Long workspaceId;
+
     private String pbiWorkspace;
 
     private String pbiId;
@@ -71,6 +73,14 @@ public class Dataset {
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Long getWorkspaceId() {
+        return workspaceId;
+    }
+
+    public void setWorkspaceId(Long workspaceId) {
+        this.workspaceId = workspaceId;
     }
 /*
     public Date getCreatedOn() {

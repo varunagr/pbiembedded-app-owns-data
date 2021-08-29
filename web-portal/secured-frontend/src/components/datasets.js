@@ -12,6 +12,7 @@ const Datasets = () => {
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
     const [tenandId, setTenantId] = useState(0);
+    const [workspaceId, setWorkspaceId] = useState(0);
     const [pbiWorkspace, setPbiWorkspace] = useState("");
     const [pbiId, setPbiId] = useState("");
     const [dataSetName, setDataSetName] = useState("");
@@ -27,8 +28,9 @@ const Datasets = () => {
         try {
             let data = {
                 tenandId: tenandId,
+                workspaceId: workspaceId,
                 pbiWorkspace: pbiWorkspace,
-                pbiId: pbiId,
+          //      pbiId: pbiId,
                 dataSetName: dataSetName,
                 createdBy: createdBy 
             };
@@ -69,6 +71,10 @@ const Datasets = () => {
                 <label>
                     Tenant Id:
                     <input type="text" value={tenandId} onChange={e => setTenantId(e.target.value)} />
+                </label>
+                <label>
+                    Workspace Id:
+                    <input type="text" value={workspaceId} onChange={e => setTenantId(e.target.value)} />
                 </label>
                 <label>
                     Power BI Workspace:

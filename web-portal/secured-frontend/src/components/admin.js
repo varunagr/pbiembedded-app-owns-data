@@ -3,11 +3,15 @@ import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useHistory, Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import WorkspaceUsers from './workspace-users';
 
 const Admin = () => {
     const [message, setMessage] = useState("");
     const [tenants, setTenants] = useState([]);
     const [users, setUsers] = useState([]);
+    const [workspaceUsers, setWorkspaceUsers] = useState({});
+    const [dataSets, setDatasets] = useData({});
+
     const [showTenants, setShowTenants] = useState(false);
     const [showUsers, setShowUsers] = useState(false);
     const [showWorkspaces, setShowWorkspaces] = useState(false);
@@ -87,7 +91,7 @@ const Admin = () => {
           console.log('Got respons back from workspaceusers');
           const responseData = await response.json();
           console.log('Thre responseData from callWorkspaceUsers is ' + responseData);
-          setWorkspaces(responseData);
+          setWorkspaceUsers(responseData);
           showNone();
           setShowWorkspaceUsers(true);
         } catch (error) {
@@ -109,6 +113,21 @@ const Admin = () => {
             setMessage(error.message);
           }
       }
+
+      const callDatasets = async () => {
+        try {
+            const response = await fetch(`${serverUrl}/datasets`);
+            console.log('Got respons back from datasets');
+            const responseData = await response.json();
+            console.log('Thre responseData from callDatasets is ' + responseData);
+            console.log('The dataset name is ' + responseData.dataSetName);
+            setDatasets(responseData);
+            showNone();
+            setShowDatasets(true);
+        } catch (error) {
+            setMessage(error.message);
+        }
+      };
 
     return (
         <div className="container">
@@ -147,6 +166,13 @@ const Admin = () => {
             >
               Workspace Users
             </button>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={callDatasets}
+            >
+              Datasets
+            </button>
           </div>
           {message && (
             <div className="mt-5">
@@ -169,9 +195,6 @@ const Admin = () => {
                     {tenants.map(tenant => (
                         <li key={tenant.id}><Link to={`/tenants/${tenant.id}`}>{tenant.tenantName}</Link></li>
                     ))}
-                    {workspaces.map(workspace => (
-                        <li key={workspace.id}><Link to={`/workspaces/${workspace.id}`}>{workspace.workspaceName}</Link></li>
-                    ))}
                 </ul>
                 </div>
               </div>
@@ -184,11 +207,8 @@ const Admin = () => {
                 </div>
                 <div>
                 <ul>
-                    {tenants.map(workspsace => (
-                        <li key={workspsace.id}><Link to={`/workspaces/${workspsace.id}`}>{workspsace.tenantName}</Link></li>
-                    ))}
-                    {workspaces.map(workspace => (
-                        <li key={workspace.id}><Link to={`/workspaces/${workspace.id}`}>{workspace.workspaceName}</Link></li>
+                    {workspaces.map(workspsace => (
+                        <li key={workspsace.id}><Link to={`/workspaces/${workspsace.id}`}>{workspsace.id} - {workspsace.workspaceName}</Link></li>
                     ))}
                 </ul>
                 </div>
@@ -217,8 +237,8 @@ const Admin = () => {
                 </div>
                 <div>
                 <ul>
-                    {users.map(workspaceUser => (
-                        <li key={workspaceUser.id}><Link to={`/users/${workspaceUser.id}`}>{workspaceUser.userId}/{workspaceUser.workspaceId}</Link></li>
+                    {workspaceUsers.map(workspaceUser => (
+                        <li key={workspaceUser.id}><Link to={`/users/${workspaceUser.id}`}>{workspaceUser.id} - {workspaceUser.userId}/{workspaceUser.workspaceId}</Link></li>
                     ))}
                 </ul>
                 </div>

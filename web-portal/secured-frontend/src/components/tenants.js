@@ -8,6 +8,7 @@ const Tenants = () => {
     const [message, setMessage] = useState("");
     const [showDiv, setShowDiv] = useState(false);
     const [tenantName, setTenantName] = useState("");
+    const [tenant, setTenant] = useState({});
     const history = useHistory();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
@@ -18,9 +19,27 @@ const Tenants = () => {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         try {
+            let tenantData = {
+                tenantName: tenantName
+            };
+
+            const createTenantResponse = await fetch(`${serverUrl}/tenants`, {
+                method: 'POST',
+                mode: 'cors',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(tenantData)
+            });
+            const createTenantResponseData = await createTenantResponse.json();
+            console.log('createTenantResponseData is ' + createTenantResponseData);
+            setTenant(createTenantResponseData);
+
+
             let pbiWorkspaceData = {
                 workspaceLocation: "eastus",
-                workspaceName: tenantName
+                workspaceName: tenantName,
+                tenantId: createTenantResponseData.id
             };
             const createPbiWorkspaceResponse = await fetch(`${serverUrl}/workspaces`, {
                 method: 'POST',
@@ -34,7 +53,7 @@ const Tenants = () => {
             const createPbiWorkspaceResponseData = await createPbiWorkspaceResponse.json();
             console.log('createPbiWorkspaceResponseData is ' + createPbiWorkspaceResponseData);
 
-      //      history.push("./admin");
+            history.push("./admin");
         } catch (error) {
             setMessage(error.message);
         }

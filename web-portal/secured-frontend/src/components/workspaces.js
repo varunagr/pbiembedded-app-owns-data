@@ -8,7 +8,8 @@ const Workspaces = () => {
     const [message, setMessage] = useState("");
     const [showDiv, setShowDiv] = useState(false);
     const [workspaceName, setWorkspaceName] = useState("");
-    const [tenantName, setTenantName] = useState("");
+    const [tenantId, setTenantId] = useState(0);
+    const [workspaceLocation, setWorkspaceLocation] = useState("");
     const history = useHistory();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
@@ -17,8 +18,8 @@ const Workspaces = () => {
     };
     const handleSubmit = async (evt) => {
         evt.preventDefault();
-        try {
-            let data = {
+       try {
+     /*        let data = {
                 tenantName: tenantName
             };
             const createTenantResponse = await fetch(`${serverUrl}/tenants`, {
@@ -32,10 +33,11 @@ const Workspaces = () => {
             console.log('createTenantResponse is ' + createTenantResponse);
             const createTenantResponseData = await createTenantResponse.json();
             console.log('createTenantResponseData is ' + createTenantResponseData);
-
+*/
             let pbiWorkspaceData = {
-                workspaceLocation: "eastus",
-                workspaceName: tenantName
+                workspaceLocation: workspaceLocation,
+                workspaceName: workspaceName,
+                tenantId: tenantId
             };
             const createPbiWorkspaceResponse = await fetch(`${serverUrl}/workspaces`, {
                 method: 'POST',
@@ -65,19 +67,23 @@ const Workspaces = () => {
                 className="btn btn-primary"
                 onClick={callShowDiv}
                 >
-                Hark
+                Add Workspace
             </button>
             </div>
             {showDiv &&
             <div>
                 <form onSubmit={handleSubmit}>
                 <label>
-                    Tenant Name:
-                    <input type="text" value={workspaceName} onChange={e => setTenantName(e.target.value)} />
-                </label>
-                <label>
                     Workspace Name:
                     <input type="text" value={workspaceName} onChange={e => setWorkspaceName(e.target.value)} />
+                </label>
+                <label>
+                   Workspace Location:
+                    <input type="text" value={workspaceLocation} onChange={e => setWorkspaceLocation(e.target.value)} />
+                </label>
+                <label>
+                   Tenant Id:
+                    <input type="text" value={tenantId} onChange={e => setTenantId(e.target.value)} />
                 </label>
                     <input type="submit" value="Submit" />
                 </form>

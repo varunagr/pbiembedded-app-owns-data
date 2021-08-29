@@ -40,7 +40,7 @@ const Users = () => {
                 body: JSON.stringify(userData)
             });
             console.log('createUserResponse is ' + createUserResponse);
-            const createUserResponseData = await createUserResponseData.json();
+            const createUserResponseData = await createUserResponse.json();
             console.log('createUserResponseData is ' + createUserResponseData);
 
             history.push("./admin");
@@ -76,11 +76,11 @@ const Users = () => {
                 </label>
                 <label>
                     Last Name:
-                    <input type="text" value={lastName} onChange={e => setEmail(e.target.value)} />
+                    <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
                 </label>
                 <label>
                     First Name:
-                    <input type="text" value={firstName} onChange={e => setEmail(e.target.value)} />
+                    <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} />
                 </label>
                 <input type="submit" value="Submit" />
                 </form>

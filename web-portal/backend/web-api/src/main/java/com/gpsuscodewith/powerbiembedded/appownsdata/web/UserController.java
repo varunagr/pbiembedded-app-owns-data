@@ -69,6 +69,7 @@ public class UserController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@RequestBody User user) {
+        String emailAddress = user.getEmail();
         return userRepository.save(user);
     }
 }

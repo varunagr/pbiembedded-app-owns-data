@@ -27,9 +27,7 @@ const Admin = () => {
           console.log('Got the responseData inside callTenants');
     
           setTenants(responseData);
-          setShowWorkspaces(false);
-          setShowUsers(false);
-          setShowWorkspaceUsers(false);
+          showNone();
           setShowTenants(true);
         } catch (error) {
           setMessage(error.message);
@@ -60,6 +58,15 @@ const Admin = () => {
         history.push('./datasets');
       }
 
+      const showNone = () => {
+        setShowTenants(false);
+        setShowUsers(false); 
+        setShowWorkspaces(false);
+        setShowWorkspaceUsers(false);
+        setShowWorkspaceReports(false);
+        setShowDatasets(false);
+      }
+
       const callWorkspaces = async () => {
         try {
           const response = await fetch(`${serverUrl}/workspaces`);
@@ -67,9 +74,7 @@ const Admin = () => {
           const responseData = await response.json();
           console.log('Thre responseData from callWorkspaces is ' + responseData);
           setWorkspaces(responseData);
-          setShowTenants(false);
-          setShowUsers(true);
-          setShowWorkspaceUsers(false);
+          showNone();
           setShowWorkspaces(true);
         } catch (error) {
           setMessage(error.message);
@@ -83,9 +88,7 @@ const Admin = () => {
           const responseData = await response.json();
           console.log('Thre responseData from callWorkspaceUsers is ' + responseData);
           setWorkspaces(responseData);
-          setShowTenants(false);
-          setShowWorkspaces(false);
-          setShowUsers(false);
+          showNone();
           setShowWorkspaceUsers(true);
         } catch (error) {
           setMessage(error.message);
@@ -98,10 +101,9 @@ const Admin = () => {
             console.log('Got respons back from users');
             const responseData = await response.json();
             console.log('Thre responseData from callUsers is ' + responseData);
+            console.log('The email address is ' + responseData.email);
             setUsers(responseData);
-            setShowTenants(false);
-            setShowWorkspaces(false);
-            setShowWorkspaceUsers(false);
+            showNone();
             setShowUsers(true);
           } catch (error) {
             setMessage(error.message);
@@ -201,7 +203,7 @@ const Admin = () => {
                 <div>
                 <ul>
                     {users.map(user => (
-                        <li key={user.id}><Link to={`/users/${user.id}`}>{user.emailAddress}</Link></li>
+                        <li key={user.id}><Link to={`/users/${user.id}`}>{user.id} / {user.email}</Link></li>
                     ))}
                 </ul>
                 </div>

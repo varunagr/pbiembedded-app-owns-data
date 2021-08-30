@@ -108,10 +108,21 @@ public class DatasetsController {
             pbiWorkspaceId = workspace.getPbiIdentifier();
         }
 
-        DatasetConfig result = PowerBiService.importFile(accessToken, Config.datasetFilePath, pbiWorkspaceId);
+        DatasetConfig result = PowerBiService.importFile(accessToken, Config.datasetFilePath, pbiWorkspaceId, dataset.getDataSetName());
+
+        // the above result is not the correct id.  another call to GetDataSetsInGroup is required to find the actual id
+        String datasetPbiId = "";
+        DatasetsConfig datasetsConfig = PowerBiService.getDatasetsInGroup(accessToken, pbiWorkspaceId);
+        for (DatasetConfig dataSetConfig : datasetsConfig.getValue()) {
+            if (dataSetConfig.getName().equalsIgnoreCase(dataset.getDataSetName())) {
+                datasetPbiId = dataSetConfig.getId();
+            }
+        }
 
         // call get report in group and grab dataset id from response
-        dataset.setPbiId(result.getId());
+        dataset.setPbiId(datasetPbiId);
+        dataset.setWebUrl(result.getWebUrl());
+        dataset.setPbiWorkspaceId(pbiWorkspaceId);
         Dataset savedDataset = datasetRepository.save(dataset);
 
         return ResponseEntity.created(new URI("/datasets/" + savedDataset.getId())).body(savedDataset);

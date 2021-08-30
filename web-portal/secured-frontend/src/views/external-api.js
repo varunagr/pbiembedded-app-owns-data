@@ -7,6 +7,7 @@ const ExternalApi = () => {
   const [users, setUsers] = useState([]);
   const [reports, setReports] = useState([]);
   const [dataSets, setDatasets] = useState([]);
+  const [userDataSets, setUserDataSets] = useState([]);
   const history = useHistory();
   const serverUrl = process.env.REACT_APP_SERVER_URL;
 
@@ -77,9 +78,35 @@ const ExternalApi = () => {
 
   const callGetUserReports = async () => {
     try {
-      const response = await fetch(`${serverUrl}/users/1/reports`);
+      const token = await getAccessTokenSilently();
+      const response = await fetch(
+        `${serverUrl}/users/1/reports`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       const responseData = await response.json();
       setReports(responseData);
+    } catch (error) {
+      setMessage(error.message);
+    }
+  }
+
+  const callGetUserDatasetsFromApi = async() => {
+    try {
+    const token = await getAccessTokenSilently();
+    const response = await fetch(
+      `${serverUrl}/users/1/datasets`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const responseData = await response.json();
+      console.log('Got the response back from callGetUserDatasetsFromApi.  The value is ' + responseData);
+     // setUserDataSets(responseData);
+     setDatasets(responseData);
     } catch (error) {
       setMessage(error.message);
     }
@@ -92,7 +119,7 @@ const ExternalApi = () => {
       const responseData = [
         {
           id: "714dbd7d-cde7-43bd-8b28-0b06f3f8285f",
-          name: "Weather"
+          dataSetName: "Weather"
         }
       ]
       setDatasets(responseData);
@@ -141,6 +168,13 @@ const ExternalApi = () => {
         <button
         type="button"
         className="btn btn-primary"
+        onClick={callGetUserDatasetsFromApi}
+        >
+          Get User Datasets
+        </button>
+        <button
+        type="button"
+        className="btn btn-primary"
         onClick={callAdmin}
         >
           Admin
@@ -168,7 +202,8 @@ const ExternalApi = () => {
         <li key={report.id}><Link to={`/reports/${report.id}`}>{report.reportName}</Link></li>
       ))}
       {dataSets.map(dataset => (
-        <li key={dataset.id}><Link to={`/datasets/${dataset.id}/f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3`}>{dataset.name}</Link></li>
+        <li key={dataset.id}><Link to={`/datasets/${dataset.id}/f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3`}>{dataset.dataSetName}</Link></li>
+      //<li key={dataset.id}><Link to={`/datasets/${dataset.pbiId}/${dataset.pbiWorkspaceId}`}>{dataset.dataSetName}</Link></li>
       ))}
     </ul>
     </div>

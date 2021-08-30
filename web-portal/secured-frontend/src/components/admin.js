@@ -309,7 +309,7 @@ const Admin = () => {
                 <div>
                 <ul>
                     {dataSets.map(dataSet => (
-                        <li key={dataSet.id}><Link to={`/datasets/${dataSet.id}`}>{dataSet.workspaceId} - {dataSet.dataSetName}</Link></li>
+                        <li key={dataSet.id}><Link to={`/datasets/${dataSet.pbiId}/${dataSet.pbiWorkspaceId}`}>{dataSet.workspaceId} - {dataSet.dataSetName}</Link></li>
                     ))}
                 </ul>
                 </div>

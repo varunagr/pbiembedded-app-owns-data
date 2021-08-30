@@ -11,9 +11,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.security.*;
 
 @CrossOrigin(maxAge = 3600)
 @RestController
@@ -36,12 +38,29 @@ public class UserController {
     }
 
     @GetMapping
-    public Iterable<User> getUsers() {
+    public Iterable<User> getUsers(Principal principal) {
+        String principalName = principal.getName();
         return userRepository.findAll();
     }
 
+    @GetMapping("/me")
+    public User getUserByPrincipal(Principal principal) {
+        String principalName = principal.getName();
+        return getUserByIdpName(principalName);
+    }
+
+    public User getUserByIdpName(String idpName) {
+        return userRepository
+                .findAll()
+                .stream()
+                .filter(x -> x.getUserId().equalsIgnoreCase(idpName))
+                .findFirst()
+                .orElse(null);
+    }
+
     @GetMapping("/{userId}/reports")
-    public Iterable<Report> getAvailableReports(@PathVariable Long userId) {
+    public Iterable<Report> getAvailableReports(@PathVariable Long userId, Principal principal) {
+        String principalName = principal.getName();
 
         PbiWorkspaceUser workspaceUser = pbiWorkspaceUserRepository
                 .findAll()
@@ -68,7 +87,7 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@RequestBody User user) {
+    public User createUser(@RequestBody User user, Principal principal) {
         String emailAddress = user.getEmail();
         return userRepository.save(user);
     }

@@ -828,12 +828,14 @@ public class PowerBiService {
 
 
 
-    public static DatasetConfig importFile(String accessToken, String filePath) throws UnsupportedOperationException, IOException {
+    public static DatasetConfig importFile(String accessToken, String filePath, String groupId) throws UnsupportedOperationException, IOException {
         String bearer = "Bearer " + accessToken;
         //String fileName = "SalesReportTemplate.pbix";
         String fileName = Paths.get(filePath).getFileName().toString();
         //String filePath = Config.datasetFilePath;
-        String groupId = Config.workspaceId;
+
+        // groupId was origionally hardcoded here based on configuration value
+        //String groupId = Config.workspaceId;
 
         HttpClient request = HttpClientBuilder.create().build();
 

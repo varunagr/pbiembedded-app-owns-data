@@ -6,6 +6,7 @@ import com.gpsuscodewith.powerbiembedded.appownsdata.config.Config;
 import com.gpsuscodewith.powerbiembedded.appownsdata.domain.*;
 import com.gpsuscodewith.powerbiembedded.appownsdata.repositories.DatasetRepository;
 //import org.simpleframework.xml.Path;
+import com.gpsuscodewith.powerbiembedded.appownsdata.repositories.PbiWorkspaceRepository;
 import com.gpsuscodewith.powerbiembedded.appownsdata.services.AzureADService;
 import com.gpsuscodewith.powerbiembedded.appownsdata.services.PowerBiService;
 import org.json.JSONException;
@@ -19,8 +20,10 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @CrossOrigin(maxAge = 3600)
@@ -29,9 +32,11 @@ import java.util.concurrent.ExecutionException;
 public class DatasetsController {
     static final Logger logger = LoggerFactory.getLogger(DatasetsController.class);
     private final DatasetRepository datasetRepository;
+    private final PbiWorkspaceRepository workspaceRepository;
 
-    public DatasetsController(DatasetRepository datasetRepository) {
+    public DatasetsController(DatasetRepository datasetRepository, PbiWorkspaceRepository workspaceRepository) {
         this.datasetRepository = datasetRepository;
+        this.workspaceRepository = workspaceRepository;
     }
 
     @GetMapping
@@ -40,12 +45,12 @@ public class DatasetsController {
     }
 
     @GetMapping("/{id}")
-    public Dataset getDataset(@PathVariable Long id) {
+    public Dataset getDataset(@PathVariable Long id, Principal principal) {
         return datasetRepository.findById(id).orElseThrow(RuntimeException::new);
     }
 
     @GetMapping("{id}/config")
-    public EmbedConfig getDatasetConfig(@PathVariable String id) {
+    public EmbedConfig getDatasetConfig(@PathVariable String id, Principal principal) {
         String accessToken = null;
         try {
             accessToken = AzureADService.getAccessToken();
@@ -78,7 +83,7 @@ public class DatasetsController {
     }
 
     @PostMapping
-    public ResponseEntity createDataset(@RequestBody Dataset dataset) throws URISyntaxException, IOException {
+    public ResponseEntity createDataset(@RequestBody Dataset dataset, Principal principal) throws URISyntaxException, IOException {
         // Get access token
         String accessToken;
         try {
@@ -97,7 +102,13 @@ public class DatasetsController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(interruptedEx.getMessage());
         }
 
-        DatasetConfig result = PowerBiService.importFile(accessToken, Config.datasetFilePath);
+        PbiWorkspace workspace = workspaceRepository.findById(dataset.getWorkspaceId()).get();
+        String pbiWorkspaceId = Config.workspaceId;
+        if (workspace != null) {
+            pbiWorkspaceId = workspace.getPbiIdentifier();
+        }
+
+        DatasetConfig result = PowerBiService.importFile(accessToken, Config.datasetFilePath, pbiWorkspaceId);
 
         // call get report in group and grab dataset id from response
         dataset.setPbiId(result.getId());
@@ -107,7 +118,7 @@ public class DatasetsController {
     }
 
     @PutMapping("{id}")
-    public ResponseEntity updateDataset(@PathVariable Long id, @RequestBody Dataset dataset) {
+    public ResponseEntity updateDataset(@PathVariable Long id, @RequestBody Dataset dataset, Principal principal) {
         Dataset currentDataset = datasetRepository.findById(id).orElseThrow(RuntimeException::new);
         currentDataset.setDataSetName(dataset.getDataSetName());
         currentDataset.setPbiWorkspace(dataset.getPbiWorkspace());
@@ -118,7 +129,7 @@ public class DatasetsController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity deleteDataset(@PathVariable Long id) {
+    public ResponseEntity deleteDataset(@PathVariable Long id, Principal principal) {
         datasetRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }

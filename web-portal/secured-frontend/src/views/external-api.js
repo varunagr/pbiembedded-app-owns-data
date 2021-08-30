@@ -51,7 +51,15 @@ const ExternalApi = () => {
 
   const callGetUsers = async () => {
     try {
-      const response = await fetch(`${serverUrl}/users`);
+      const token = await getAccessTokenSilently();
+
+      const response = await fetch(
+        `${serverUrl}/users`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
       const responseData = await response.json();
 
       setUsers(responseData);
@@ -136,6 +144,13 @@ const ExternalApi = () => {
         onClick={callAdmin}
         >
           Admin
+        </button>
+        <button
+        type="button"
+        className="btn btn-primary"
+        onClick={callGetUsers}
+        >
+          Get All Users
         </button>
       </div>
       {message && (

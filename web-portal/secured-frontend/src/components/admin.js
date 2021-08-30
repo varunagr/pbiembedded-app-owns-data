@@ -20,12 +20,21 @@ const Admin = () => {
     const [showDatasets, setShowDatasets] = useState(false);
     const [workspaces, setWorkspaces] = useState([]);
     const history = useHistory();
+    const { getAccessTokenSilently } = useAuth0();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
       const callTenants = async () => {
         console.log('Inside callTenants');
         try {
-          const response = await fetch(`${serverUrl}/tenants`);
+            const token = await getAccessTokenSilently();
+            const response = await fetch(
+                `${serverUrl}/tenants`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+                );
           console.log('Got the response inside callTenants');
           const responseData = await response.json();
           console.log('Got the responseData inside callTenants');
@@ -73,7 +82,15 @@ const Admin = () => {
 
       const callWorkspaces = async () => {
         try {
-          const response = await fetch(`${serverUrl}/workspaces`);
+            const token = await getAccessTokenSilently();
+            const response = await fetch(
+                `${serverUrl}/workspaces`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+                );
           console.log('Got respons back from workspaces');
           const responseData = await response.json();
           console.log('Thre responseData from callWorkspaces is ' + responseData);
@@ -87,7 +104,15 @@ const Admin = () => {
 
       const callWorkspaceUsers = async () => {
         try {
-          const response = await fetch(`${serverUrl}/workspaceusers`);
+          const token = await getAccessTokenSilently();
+          const response = await fetch(
+              `${serverUrl}/workspaceusers`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+              );
           console.log('Got respons back from workspaceusers');
           const responseData = await response.json();
           console.log('Thre responseData from callWorkspaceUsers is ' + responseData);
@@ -101,7 +126,15 @@ const Admin = () => {
 
       const callUsers = async () => {
         try {
-            const response = await fetch(`${serverUrl}/users`);
+            const token = await getAccessTokenSilently();
+
+            const response = await fetch(
+                `${serverUrl}/users`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
             console.log('Got respons back from users');
             const responseData = await response.json();
             console.log('Thre responseData from callUsers is ' + responseData);
@@ -116,11 +149,19 @@ const Admin = () => {
 
       const callDatasets = async () => {
         try {
-            const response = await fetch(`${serverUrl}/datasets`);
+            const token = await getAccessTokenSilently();
+
+            const response = await fetch(
+                `${serverUrl}/datasets`,
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}`,
+                    },
+                  }
+                );
             console.log('Got respons back from datasets');
             const responseData = await response.json();
             console.log('Thre responseData from callDatasets is ' + responseData);
-            console.log('The dataset name is ' + responseData.dataSetName);
             setDatasets(responseData);
             showNone();
             setShowDatasets(true);
@@ -267,8 +308,8 @@ const Admin = () => {
                 </div>
                 <div>
                 <ul>
-                    {users.map(dataSet => (
-                        <li key={dataSet.id}><Link to={`/datasets/${dataSet.id}`}>{dataSet.pbiWorkspace} - {dataSet.dataSetName}</Link></li>
+                    {dataSets.map(dataSet => (
+                        <li key={dataSet.id}><Link to={`/datasets/${dataSet.id}`}>{dataSet.workspaceId} - {dataSet.dataSetName}</Link></li>
                     ))}
                 </ul>
                 </div>

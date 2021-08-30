@@ -10,6 +10,7 @@ const Tenants = () => {
     const [tenantName, setTenantName] = useState("");
     const [tenant, setTenant] = useState({});
     const history = useHistory();
+    const { getAccessTokenSilently } = useAuth0();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
     const callShowDiv = async () => {
@@ -22,12 +23,13 @@ const Tenants = () => {
             let tenantData = {
                 tenantName: tenantName
             };
-
+            const token = await getAccessTokenSilently();
             const createTenantResponse = await fetch(`${serverUrl}/tenants`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(tenantData)
             });
@@ -45,7 +47,8 @@ const Tenants = () => {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(pbiWorkspaceData)
             });

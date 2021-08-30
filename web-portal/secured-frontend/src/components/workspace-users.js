@@ -13,6 +13,8 @@ const WorkspaceUsers = () => {
     const [showNewWorkspaceUser, setShowNewWorkspaceUser] = useState(false);
     const history = useHistory();
 
+    const { getAccessTokenSilently } = useAuth0();
+
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
     const callShowNewUser = () => {
@@ -27,11 +29,13 @@ const WorkspaceUsers = () => {
                 userId: userId,
                 workspaceId: workspaceId 
             };
+            const token = await getAccessTokenSilently();
             const createPbiWorkspaceUserResponse = await fetch(`${serverUrl}/workspaceusers`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(pbiWorkspaceUserData)
             });

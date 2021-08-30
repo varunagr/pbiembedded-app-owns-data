@@ -11,6 +11,7 @@ const WorkspaceReports = () => {
     const [reportId, setReportId] = useState(0);
 
     const [showNewWorkspaceReport, setShowNewWorkspaceReport] = useState(false);
+    const { getAccessTokenSilently } = useAuth0();
     const history = useHistory();
 
     const serverUrl = process.env.REACT_APP_SERVER_URL;
@@ -27,11 +28,13 @@ const WorkspaceReports = () => {
                 workspaceId: workspaceId,
                 reportId: reportId 
             };
+            const token = await getAccessTokenSilently();
             const createPbiWorkspaceReportResponse = await fetch(`${serverUrl}/workspacereports`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(pbiWorkspaceUserData)
             });

@@ -17,6 +17,7 @@ const Datasets = () => {
     const [pbiId, setPbiId] = useState("");
     const [dataSetName, setDataSetName] = useState("");
     const [createdBy, setCreatedBy] = useState("");
+    const { getAccessTokenSilently } = useAuth0();
 
     const callShowDiv = async () => {
         setShowDiv(!showDiv);    
@@ -34,17 +35,19 @@ const Datasets = () => {
                 dataSetName: dataSetName,
                 createdBy: createdBy 
             };
+            const token = await getAccessTokenSilently();
             const createDatasetResponse = await fetch(`${serverUrl}/datasets`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(data)
             });
             console.log('createDatasetResponse is ' + createDatasetResponse);
             const createDatasetResponseData = await createDatasetResponse.json();
-            console.log('createDatasetResponseData is ' + createDatasetResponseData);
+            console.log('createDatasetResponseData is ' + createDatasetResponseData.id);
 
             history.push("./admin");
         } catch (error) {
@@ -74,7 +77,7 @@ const Datasets = () => {
                 </label>
                 <label>
                     Workspace Id:
-                    <input type="text" value={workspaceId} onChange={e => setTenantId(e.target.value)} />
+                    <input type="text" value={workspaceId} onChange={e => setWorkspaceId(e.target.value)} />
                 </label>
                 <label>
                     Power BI Workspace:

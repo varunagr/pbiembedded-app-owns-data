@@ -15,6 +15,8 @@ const Users = () => {
     const history = useHistory();
     const [showNewUser, setShowNewUser] = useState(false);
 
+    const { getAccessTokenSilently } = useAuth0();
+
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
     const callShowNewUser = () => {
@@ -31,11 +33,13 @@ const Users = () => {
                 lastName: lastName,
                 firstName: firstName 
             };
+            const token = await getAccessTokenSilently();
             const createUserResponse = await fetch(`${serverUrl}/users`, {
                 method: 'POST',
                 mode: 'cors',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify(userData)
             });

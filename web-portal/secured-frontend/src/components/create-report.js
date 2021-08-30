@@ -25,11 +25,13 @@ const CreateReport = () => {
             reportName: reportName
         };
         try {
+          const token = await getAccessTokenSilently();
           const clonedReportResponse = await fetch(`${serverUrl}/reports/${reportId}/clone`, {
               method: 'POST',
               mode: 'cors',
               headers: {
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'Authorization': `Bearer ${token}`,
               },
               body: JSON.stringify(data)
           });

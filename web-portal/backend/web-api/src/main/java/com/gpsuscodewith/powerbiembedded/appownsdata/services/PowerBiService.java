@@ -651,6 +651,32 @@ public class PowerBiService {
         return embedToken;
     }
 
+    public static DatasetsConfig getDatasetsInGroup(String accessToken, String groupId) throws JsonProcessingException {
+        final String uri = "https://api.powerbi.com/v1.0/myorg/groups/" + groupId + "/datasets";
+
+        RestTemplate restTemplate = new RestTemplate();
+        // Create request header
+        HttpHeaders headers = new HttpHeaders();
+        headers.put("Content-Type", Arrays.asList("application/json"));
+        headers.put("Authorization", Arrays.asList("Bearer " + accessToken));
+        headers.add("user-agent", "Application");
+
+        JSONObject requestBody = new JSONObject();
+
+        // Add (body, header) to HTTP entity
+        HttpEntity<String> httpEntity = new HttpEntity<> (headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, httpEntity, String.class);
+        HttpHeaders responseHeader = response.getHeaders();
+        String responseBody = response.getBody();
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        DatasetsConfig dataSetsConfig = mapper.readValue(responseBody, DatasetsConfig.class);
+
+        return dataSetsConfig;
+    }
+
     public static GroupConfig createGroup(String accessToken, String groupName) throws JSONException, JsonProcessingException {
         final String uri = "https://api.powerbi.com/v1.0/myorg/groups";
 
@@ -828,16 +854,18 @@ public class PowerBiService {
 
 
 
-    public static DatasetConfig importFile(String accessToken, String filePath) throws UnsupportedOperationException, IOException {
+    public static DatasetConfig importFile(String accessToken, String filePath, String groupId, String datasetName) throws UnsupportedOperationException, IOException {
         String bearer = "Bearer " + accessToken;
         //String fileName = "SalesReportTemplate.pbix";
         String fileName = Paths.get(filePath).getFileName().toString();
         //String filePath = Config.datasetFilePath;
-        String groupId = Config.workspaceId;
+
+        // groupId was origionally hardcoded here based on configuration value
+        //String groupId = Config.workspaceId;
 
         HttpClient request = HttpClientBuilder.create().build();
 
-        HttpPost post = new HttpPost( "https://api.powerbi.com/v1.0/myorg/groups/" + groupId + "/imports?datasetDisplayName=" + fileName);
+        HttpPost post = new HttpPost( "https://api.powerbi.com/v1.0/myorg/groups/" + groupId + "/imports?datasetDisplayName=" + datasetName);
 
         long time = (new Date()).getTime();
         String boundary = "---------------------------" + time;

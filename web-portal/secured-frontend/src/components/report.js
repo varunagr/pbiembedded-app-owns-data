@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import { PowerBIEmbed } from 'powerbi-client-react';
 import { models } from 'powerbi-client';
 
@@ -8,6 +9,7 @@ const Report = () => {
     const [message, setMessage] = useState("");
 
     const { reportId } = useParams();
+    const { getAccessTokenSilently } = useAuth0();
     const serverUrl = process.env.REACT_APP_SERVER_URL;
 
     console.log('Got the reportId from the params ' + reportId);
@@ -15,7 +17,15 @@ const Report = () => {
       useEffect(() => {
         const callGetReportConfig = async () => {
           try {
-            const response = await fetch(`${serverUrl}/reports/${reportId}/pbiconfig`);
+            const token = await getAccessTokenSilently();
+            const response = await fetch(
+              `${serverUrl}/reports/${reportId}/pbiconfig`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
             console.log('Inside callGetReportConfig.  Got a response back of ' + response);
             const responseData = await response.json();
       

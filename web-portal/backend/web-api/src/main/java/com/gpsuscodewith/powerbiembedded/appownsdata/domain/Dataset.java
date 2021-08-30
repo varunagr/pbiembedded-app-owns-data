@@ -19,11 +19,15 @@ public class Dataset {
 
     private String pbiWorkspace;
 
+    private String pbiWorkspaceId;
+
     private String pbiId;
 
     private String dataSetName;
 
     private String createdBy;
+
+    private String webUrl;
 
   //  private Date createdOn;
 
@@ -81,6 +85,22 @@ public class Dataset {
 
     public void setWorkspaceId(Long workspaceId) {
         this.workspaceId = workspaceId;
+    }
+
+    public String getPbiWorkspaceId() {
+        return pbiWorkspaceId;
+    }
+
+    public void setPbiWorkspaceId(String pbiWorkspaceId) {
+        this.pbiWorkspaceId = pbiWorkspaceId;
+    }
+
+    public String getWebUrl() {
+        return webUrl;
+    }
+
+    public void setWebUrl(String webUrl) {
+        this.webUrl = webUrl;
     }
 /*
     public Date getCreatedOn() {

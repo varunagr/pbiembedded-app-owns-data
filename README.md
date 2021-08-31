@@ -574,3 +574,38 @@ The frontend can be started by executing the following commands in the /secured-
 npm install
 npm start
 ````
+
+## Sample Scenarios
+
+The sample app demonstrates a few key scenarious for multitenant app owns data deployments. Here is a description of the scenarious and how to walk through them.
+
+### Federated Identity With Multi-Tenant Authorization
+
+As mentioned above, this sample uses Federated Identity by integrating with Auth0.  After launching the application, you will see a "Log In" button at the top right corner of the application.  Clicking the button will launch the Auth0 PKCE flow where you will create a user in Auth0 or use one of their identity providers (Google, Twitter, Facebook, etc.) After successfully authenticating, you wil be redirected back to the application.  At the top of the application there is a tab lapeled "Profile".  Clicking on this will show you the contents of the JWT token that was delivered by Auth0.  We will use the token's audience (the user) as the main identifier for which we will create a user in the Admin tasks.
+
+### Calling Protected APIs
+
+The code samples have protected backend REST APIs.  All these endpoints are projected by OAuth and mappings are configured in your Java Spring configuration.  You will see blue buttons in the sample application that launch certain scenarious.  The "Get Public Messace" will call an unprotected backend API, where the "Get Protected Message" will call a protected endpoint.  This will allow you to experiement with the mapping configurations in the backed Java code and see how the configuration is set up.  You can also look at the React code for silently getting a token and passing it as a bearer token.  The Java security code will need this to authorize the user.
+
+### Admin Functionality
+
+Rather than building a seperate admin site, this sample includes a tab for admin functionality.  It is assumed that the logged in user is a site admin.  In a real-world scenario, the logged in user would need a permissions enabling him/her to perform administrative tasks.  
+
+After clicking on the admin tab, you will see several sub tabs:
+1. Tenants
+2. Workspaces
+3. Users
+4. Workspace Users
+5. Datasets
+
+Clicking on "Tenants" will show you all current teantns in the system.  You will also be shown an "Add Tenant" buttont that will allow you to create a new tenant.  After filling out the form, the React code will send a secure REST call to the backend, where the backend service will createa new Power BI workspace and record the settings.  The relationship between tenant and workspace will be recoded as well.  The default Power BI admin user will be added to the Power BI tenant automatically.  
+
+Clicking on "Workspaces" offers the same functinoality as "Tenants" in that it will show all current workspaces and allow you to create a new workspace.
+
+The "Users" tab enables you to create users in the system.  There is a text for that asks you for the IDP user id.  You can find this from the content of the JWT that Auth0 sent by looking at the "Profile" tab at the top of the site.
+
+The "Workspace Users" tab allows you to create an association between a user and a workspace.  By clicking on the "Users" and "Workspace" tabs, you can find the ID values of the user and workspace that you want to link.  Just enter those values and click submit.
+
+For "Datasets" you can see all the current Datasets and click on "Add Dataset" to create a new Dataset.  In the "New Dataset" form, you will need to know the powbi workspace id.  You can find that by looking at your Power BI instance.  As a convenience, the value is being returned from the /workspaces api call and logged to the console.  Browser developer tools can be used to quickly find that value.  When you create a new dataset, a local .pbix file that sits in the source code will be uploaded.  This creates a new report and dataset.  This process simulates a new dataset/datasource being published, where an out-of-band process will create the .pbix file and use the backed API to upload it.
+
+

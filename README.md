@@ -556,3 +556,21 @@ is created in the format of
 **api://\[ApplicationID\]/Reports.Embed**.
 
 <img src="Docs\media\image55.png" style="width:4.73089in;height:1.43558in" />
+
+## Running the Sample
+
+There are 2 key projects the need to be run to run the sample:
+1. Secured-Backed
+2. Frontend
+
+The Secured Backend is a Java Spring application so it will require that the JDK is installed on your machines. You can launchced using the following command in the backend/web-api directory:
+````sh
+mvn spring-boot:run
+````
+You can also open the project in an IDE such as IntelliJ and launch it through a debuuger if you would like to set break points.
+
+The frontend can be started by executing the following commands in the /secured-frontend directory.  Please note you will need NodeJS to be installed on your machine.  If you do not have NodeJS installed on your machine, please visit nodejs.org for instructions on how to install it for your particular operating system.
+````sh
+npm install
+npm start
+````

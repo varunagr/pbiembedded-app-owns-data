@@ -608,4 +608,10 @@ The "Workspace Users" tab allows you to create an association between a user and
 
 For "Datasets" you can see all the current Datasets and click on "Add Dataset" to create a new Dataset.  In the "New Dataset" form, you will need to know the powbi workspace id.  You can find that by looking at your Power BI instance.  As a convenience, the value is being returned from the /workspaces api call and logged to the console.  Browser developer tools can be used to quickly find that value.  When you create a new dataset, a local .pbix file that sits in the source code will be uploaded.  This creates a new report and dataset.  This process simulates a new dataset/datasource being published, where an out-of-band process will create the .pbix file and use the backed API to upload it.
 
+### Embedding functionality
 
+After you have created tenants/workspaces/users/workspace users/datasets from the admin tab, you will be able to experiment with the actual embdedding functionality.  This will be a similar experience that an end-user will see.  
+
+From the main set of buttons, you can click on "Get Datasets".  This will show the experience of opening a dataset in edit mode, creating an report, saving it to a new workspace, and viewing it.  This tab, for simplicity sake, uses hardocded dataset/workspace data so you can focus on the code needed to display and clone only.  You can extend this by adding security trimming similar to what you will see in the "Get User Datasets" tab.
+
+In the "Get User Datasets" tab 

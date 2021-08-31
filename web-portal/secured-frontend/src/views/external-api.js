@@ -152,13 +152,6 @@ const ExternalApi = () => {
           Get Protected Message
         </button>
         <button
-          type="button"
-          className="btn btn-primary"
-          onClick={callGetUserReports}
-        >
-          Get Reports
-        </button>
-        <button
         type="button"
         className="btn btn-primary"
         onClick={callGetUserDataSets}
@@ -178,13 +171,6 @@ const ExternalApi = () => {
         onClick={callAdmin}
         >
           Admin
-        </button>
-        <button
-        type="button"
-        className="btn btn-primary"
-        onClick={callGetUsers}
-        >
-          Get All Users
         </button>
       </div>
       {message && (

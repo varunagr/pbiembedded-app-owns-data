@@ -239,6 +239,9 @@ public class PowerBiService {
         for (String datasetId : datasetIds) {
             // Get Report In Group API: https://api.powerbi.com/v1.0/myorg/groups/{workspaceId}/reports/{reportId}
             StringBuilder urlStringBuilder = new StringBuilder("https://api.powerbi.com/v1.0/myorg/groups/");
+            // leaving hardcoded.  look below.  this should show you how the dataset is needed here for the embed config as well
+            // as the access token.  You will see the same hardcoded value on line 344.  Replace both hardcoded values
+            // with the parameters being passed in.
             urlStringBuilder.append("f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3");
             urlStringBuilder.append("/datasets/");
             urlStringBuilder.append(datasetId);
@@ -331,8 +334,14 @@ public class PowerBiService {
             reportEmbedConfig.embedReports.add(embedReport);
         }
 
-        // Get embed token
-        reportEmbedConfig.embedToken = PowerBiService.getEmbedToken(accessToken, reportIds, datasetIds,"6e5482de-8849-4ec2-b432-0939f3a15f31",  "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3");
+        // Get embed token - notice the hardcoded rouse and destination workspaceIds.  These are needed as the report can be in a different
+        // workspace that points back to the dataset.  I want to make sure this is clear.  Remove the hardcoded values in place of parameters
+        // when adapting.
+        reportEmbedConfig.embedToken = PowerBiService.getEmbedToken(
+                accessToken,
+                reportIds,
+                datasetIds,
+                "6e5482de-8849-4ec2-b432-0939f3a15f31",  "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3");
         //reportEmbedConfig.embedToken = PowerBiService.getCreateReportEmbedToken(accessToken, workspaceId, datasetIds.get(0));
         return reportEmbedConfig;
     }

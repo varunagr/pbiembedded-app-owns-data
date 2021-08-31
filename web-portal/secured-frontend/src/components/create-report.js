@@ -35,13 +35,9 @@ const CreateReport = () => {
               },
               body: JSON.stringify(data)
           });
-          console.log('Got the clone response with a value of ' + clonedReportResponse);
           const clonedReportResponseData = await clonedReportResponse.json();
-          console.log('Got the json value of ' + clonedReportResponseData);
-          console.log('The new report id is ' + clonedReportResponseData.pbiIdentifier);
           // delete the origional report with the passed in reportId
           history.push(`/reports/${clonedReportResponseData.pbiIdentifier}`);
-         // setClonedReport(clonedReportResponseData);
         } catch (error) {
           setMessage(error.message);
         }
@@ -51,71 +47,59 @@ const CreateReport = () => {
         console.log('entered useEffect()');
 
         const callGetEmbedConfig = async () => {
-       //     try {
               const pbiConfigResponse = await fetch(`${serverUrl}/datasets/${datasetId}/config`);
               const pbiConfigResponseData = await pbiConfigResponse.json();
-    
-              console.log('Inside callGetEmbedConfig. The response back was ' + pbiConfigResponseData);
-    
               setEmbedConfig(pbiConfigResponseData);
 
-
-       //     } catch (error) {
-      //        setMessage(error.message);
-       //     }
-
-            console.log('After callGetEmbedConfig()');
-
-        let reportContainer = document.getElementById("reportContainer");
-        
-        let embedCreateConfiguration = {
-            type: "report",
-            tokenType: 1,
-            accessToken: pbiConfigResponseData.embedToken.token,
-            embedUrl: pbiConfigResponseData.embedDatasets[0].createReportEmbedURL,
-            datasetId: pbiConfigResponseData.embedDatasets[0].id,
-            permissions: models.Permissions.All,
-            settings: {
-              panes: {
-                filters: {
-                  expanded: true,
-                  visible: true
+            let reportContainer = document.getElementById("reportContainer");
+            
+            let embedCreateConfiguration = {
+                type: "report",
+                tokenType: 1,
+                accessToken: pbiConfigResponseData.embedToken.token,
+                embedUrl: pbiConfigResponseData.embedDatasets[0].createReportEmbedURL,
+                datasetId: pbiConfigResponseData.embedDatasets[0].id,
+                permissions: models.Permissions.All,
+                settings: {
+                panes: {
+                    filters: {
+                    expanded: true,
+                    visible: true
+                    }
+                },
                 }
-              },
+            };
+
+            if (reportContainer != null) {
+                let report = powerbi.createReport(reportContainer, embedCreateConfiguration);
+                // Clear any other loaded handler events
+                report.off("loaded");
+
+                // Triggers when a content schema is successfully loaded
+                report.on("loaded", function () {
+                console.log("Report load successful");
+                });
+
+                // Clear any other rendered handler events
+                report.off("rendered");
+
+                // Triggers when a content is successfully embedded in UI
+                report.on("rendered", function () {
+                    console.log("Report render successful");
+                });
+
+                report.off("saved");
+                report.on("saved", function (event) {
+                    let reportId = event.detail.reportObjectId;
+                    let reportName = event.detail.reportName;
+                    let sourceWorkspaceId = "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3";
+                    let destinationWorkspaceId = "6e5482de-8849-4ec2-b432-0939f3a15f31";
+                    callCloneReport(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId);
+                });
+            } else {
+                console.log('Report container was not found');
             }
         };
-
-        if (reportContainer != null) {
-            let report = powerbi.createReport(reportContainer, embedCreateConfiguration);
-            // Clear any other loaded handler events
-            report.off("loaded");
-
-            // Triggers when a content schema is successfully loaded
-            report.on("loaded", function () {
-            console.log("Report load successful");
-            });
-
-            // Clear any other rendered handler events
-            report.off("rendered");
-
-            // Triggers when a content is successfully embedded in UI
-            report.on("rendered", function () {
-                console.log("Report render successful");
-            });
-
-            report.off("saved");
-            report.on("saved", function (event) {
-                let reportId = event.detail.reportObjectId;
-                let reportName = event.detail.reportName;
-                let sourceWorkspaceId = "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3";
-                let destinationWorkspaceId = "6e5482de-8849-4ec2-b432-0939f3a15f31";
-                callCloneReport(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId);
-            });
-        } else {
-            console.log('Report container was not found');
-        }
-        };
-
         callGetEmbedConfig();   
     }, []);
     return (

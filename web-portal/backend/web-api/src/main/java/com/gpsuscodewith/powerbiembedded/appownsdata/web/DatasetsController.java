@@ -71,7 +71,6 @@ public class DatasetsController {
 
         try {
             EmbedConfig embedConfig = PowerBiService.getReportEmbedConfig(accessToken, workspacePbiIdentifier, reportIds, datasetIds);
-          //  DatasetConfig datasetConfig = embedConfig.embedDatasets.get(0);
             return embedConfig;
         } catch (JsonProcessingException e) {
             e.printStackTrace();

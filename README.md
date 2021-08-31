@@ -614,4 +614,4 @@ After you have created tenants/workspaces/users/workspace users/datasets from th
 
 From the main set of buttons, you can click on "Get Datasets".  This will show the experience of opening a dataset in edit mode, creating an report, saving it to a new workspace, and viewing it.  This tab, for simplicity sake, uses hardocded dataset/workspace data so you can focus on the code needed to display and clone only.  You can extend this by adding security trimming similar to what you will see in the "Get User Datasets" tab.
 
-In the "Get User Datasets" tab 
+In the "Get User Datasets" tab the ui will call a backend API to determine all the datasets that the current user has access to see.  Examples of how to perform filtern over screams can be found in the DatasetsController class, and additional security trimming can be added there.  The data model can also be extended to support additional relationships and attributes to meet future security requirements.

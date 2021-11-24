@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
@@ -123,7 +124,7 @@ public class ReportController {
     }
 
     @GetMapping("/{reportId}/pbiconfig")
-    public Report getNewSaveReportConfig(@PathVariable String reportId) {/*
+    public Report getNewSaveReportConfig(@PathVariable String reportId, @RequestParam String workSpacePbid, @RequestParam List<String> datasetIds) {/*
         Report report = reportRepository.findById(reportId).get();
 
         WorkspaceReport workspaceReport = workspaceReportRepository
@@ -149,15 +150,15 @@ public class ReportController {
         //String reportPbiIdentifier = report.getPbiIdentifier();
         //String workspacePbiIdentifier = workspace.getPbiIdentifier();
         String workspacePbiIdentifier = Config.workspaceId;
-        workspacePbiIdentifier = "6e5482de-8849-4ec2-b432-0939f3a15f31";
+        workspacePbiIdentifier = workSpacePbid;
         //String reportPbiIdentifier = Config.reportId;
         String reportPbiIdentifier = reportId;
 
         ArrayList<String> reportIds = new ArrayList<String>();
         reportIds.add(reportPbiIdentifier);
 
-        ArrayList<String> datasetIds = new ArrayList<String>();
-        datasetIds.add("714dbd7d-cde7-43bd-8b28-0b06f3f8285f");
+//        ArrayList<String> datasetIds = new ArrayList<String>();
+//        datasetIds.add("714dbd7d-cde7-43bd-8b28-0b06f3f8285f");
        // ArrayList<String> workspaceIds = new ArrayList<String>();
        // workspaceIds.add("6e5482de-8849-4ec2-b432-0939f3a15f31");
 

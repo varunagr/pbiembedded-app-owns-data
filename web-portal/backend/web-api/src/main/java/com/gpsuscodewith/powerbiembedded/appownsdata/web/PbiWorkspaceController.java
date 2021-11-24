@@ -55,7 +55,7 @@ public class PbiWorkspaceController {
         String addUserResponse = PowerBiService.addUserToGroup(
                 accessToken,
                 pbiWorkspace.getPbiIdentifier(),
-                "admin@bobjacsamples.onmicrosoft.com",
+                "varun.agrawal@msci.com",
                 "Admin");
         return pbiWorkspaceRepository.save(pbiWorkspace);
     }

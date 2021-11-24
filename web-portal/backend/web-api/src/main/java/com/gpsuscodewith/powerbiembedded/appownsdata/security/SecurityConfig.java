@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           //              "/workspacereports"
                           ).permitAll()
          //       .mvcMatchers(HttpMethod.POST, "/users").permitAll()
-                .mvcMatchers("/api/private",
+               /* .mvcMatchers("/api/private",
                         "/users",
                         "/datasets",
                         "/workspaces",
@@ -48,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/reports",
                         "/workspacereports"
                         ).authenticated()
-                .mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")
+                .mvcMatchers("/api/private-scoped").hasAuthority("SCOPE_read:messages")*/
+                .mvcMatchers("/api/private").permitAll()
                 .and().cors()
                 .and().oauth2ResourceServer().jwt();
 

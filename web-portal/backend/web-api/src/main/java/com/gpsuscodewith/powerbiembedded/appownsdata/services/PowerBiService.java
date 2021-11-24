@@ -242,7 +242,7 @@ public class PowerBiService {
             // leaving hardcoded.  look below.  this should show you how the dataset is needed here for the embed config as well
             // as the access token.  You will see the same hardcoded value on line 344.  Replace both hardcoded values
             // with the parameters being passed in.
-            urlStringBuilder.append("f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3");
+            urlStringBuilder.append(Config.workspaceId);
             urlStringBuilder.append("/datasets/");
             urlStringBuilder.append(datasetId);
 
@@ -341,7 +341,7 @@ public class PowerBiService {
                 accessToken,
                 reportIds,
                 datasetIds,
-                "6e5482de-8849-4ec2-b432-0939f3a15f31",  "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3");
+                Config.workspaceId);
         //reportEmbedConfig.embedToken = PowerBiService.getCreateReportEmbedToken(accessToken, workspaceId, datasetIds.get(0));
         return reportEmbedConfig;
     }

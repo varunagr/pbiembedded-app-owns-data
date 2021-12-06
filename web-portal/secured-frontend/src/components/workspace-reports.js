@@ -14,7 +14,7 @@ const WorkspaceReports = () => {
     const { getAccessTokenSilently } = useAuth0();
     const history = useHistory();
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const serverUrl = 'http://localhost:8080';
 
     const callShowNewWorkspaceReport = () => {
         setShowNewWorkspaceReport(true);    

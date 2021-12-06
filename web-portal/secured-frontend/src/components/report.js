@@ -10,16 +10,17 @@ const Report = () => {
 
     const { reportId } = useParams();
     const { getAccessTokenSilently } = useAuth0();
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const serverUrl = 'http://localhost:8080';
 
     console.log('Got the reportId from the params ' + reportId);
     
       useEffect(() => {
         const callGetReportConfig = async () => {
           try {
-            const token = await getAccessTokenSilently();
+            // const token = await getAccessTokenSilently();
+            const token = 'dummy';
             const response = await fetch(
-              `${serverUrl}/reports/${reportId}/pbiconfig`,
+              `${serverUrl}/reports/${reportId}/pbiconfig?workSpacePbid=fae2e405-c57d-4015-b72e-c5c691728a26&datasetIds=7476e48c-62af-40c1-b54f-9a478f39d76e`,
               {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -50,7 +51,8 @@ const Report = () => {
             accessToken: reportConfig.accessToken,
             tokenType: models.TokenType.Embed,
             permissions: models.Permissions.All,
-            viewMode: models.ViewMode.View,
+            //datasetBinding:{datasetId : "7476e48c-62af-40c1-b54f-9a478f39d76e"},
+            viewMode: models.ViewMode.Edit,
             settings: {
               panes: {
                 filters: {
@@ -66,7 +68,8 @@ const Report = () => {
             new Map([
               ['loaded', function () {console.log('Report loaded');}],
               ['rendered', function () {console.log('Report rendered');}],
-              ['error', function (event) {console.log(event.detail);}]
+              ['error', function (event) {console.log(event.detail);}],
+              ['saved', function (event) {console.log('Report saved');}]
             ])
           }
             

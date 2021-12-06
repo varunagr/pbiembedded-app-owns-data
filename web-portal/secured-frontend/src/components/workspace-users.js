@@ -15,7 +15,7 @@ const WorkspaceUsers = () => {
 
     const { getAccessTokenSilently } = useAuth0();
 
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const serverUrl = 'http://localhost:8080';
 
     const callShowNewUser = () => {
         setShowNewWorkspaceUser(true);    

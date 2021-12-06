@@ -9,7 +9,7 @@ const Datasets = () => {
     const [showDiv, setShowDiv] = useState(false);
 
     const history = useHistory();
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const serverUrl = 'http://localhost:8080';
 
     const [tenandId, setTenantId] = useState(0);
     const [workspaceId, setWorkspaceId] = useState(0);

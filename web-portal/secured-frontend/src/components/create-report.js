@@ -15,7 +15,7 @@ const CreateReport = () => {
     const history = useHistory();
     
     const { datasetId, workspaceId } = useParams();
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const serverUrl = 'http://localhost:8080';
 
     const callCloneReport = async(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId) => {
         let data = {
@@ -25,7 +25,8 @@ const CreateReport = () => {
             reportName: reportName
         };
         try {
-          const token = await getAccessTokenSilently();
+          // const token = await getAccessTokenSilently();
+          const token = 'dummy';
           const clonedReportResponse = await fetch(`${serverUrl}/reports/${reportId}/clone`, {
               method: 'POST',
               mode: 'cors',
@@ -47,7 +48,7 @@ const CreateReport = () => {
         console.log('entered useEffect()');
 
         const callGetEmbedConfig = async () => {
-              const pbiConfigResponse = await fetch(`${serverUrl}/datasets/${datasetId}/config`);
+              const pbiConfigResponse = await fetch(`${serverUrl}/datasets/config?datasetIds=7476e48c-62af-40c1-b54f-9a478f39d76e,c521caeb-49ca-4b76-99c3-bac5a676056f`);
               const pbiConfigResponseData = await pbiConfigResponse.json();
               setEmbedConfig(pbiConfigResponseData);
 
@@ -61,6 +62,7 @@ const CreateReport = () => {
                 datasetId: pbiConfigResponseData.embedDatasets[0].id,
                 permissions: models.Permissions.All,
                 settings: {
+               
                 panes: {
                     filters: {
                     expanded: true,
@@ -88,14 +90,27 @@ const CreateReport = () => {
                     console.log("Report render successful");
                 });
 
-                report.off("saved");
-                report.on("saved", function (event) {
-                    let reportId = event.detail.reportObjectId;
-                    let reportName = event.detail.reportName;
-                    let sourceWorkspaceId = "f9ee0ebe-14f2-45ec-af3a-34e4c4a399e3";
-                    let destinationWorkspaceId = "6e5482de-8849-4ec2-b432-0939f3a15f31";
-                    callCloneReport(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId);
+                
+
+                report.on("saveAsTriggered", function (event) {
+                    let saveAsParameters = {
+                        name: "newReport5",
+                        targetWorkspaceId: "fae2e405-c57d-4015-b72e-c5c691728a26"
+                    };
+                    report.saveAs(saveAsParameters);
+                    console.log("sss");
                 });
+
+           
+
+                report.off("saved");
+                // report.on("saved", function (event) {
+                //     let reportId = event.detail.reportObjectId;
+                //     let reportName = event.detail.reportName;
+                //     let sourceWorkspaceId = "a586fb0a-38b7-4808-928f-a03c4b7292ee";
+                //     let destinationWorkspaceId = "fae2e405-c57d-4015-b72e-c5c691728a26";
+                //     callCloneReport(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId);
+                // });
             } else {
                 console.log('Report container was not found');
             }

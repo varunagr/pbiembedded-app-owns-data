@@ -12,7 +12,7 @@ const Workspaces = () => {
     const [workspaceLocation, setWorkspaceLocation] = useState("");
     const history = useHistory();
     const { getAccessTokenSilently } = useAuth0();
-    const serverUrl = process.env.REACT_APP_SERVER_URL;
+    const serverUrl = 'http://localhost:8080';
 
     const callShowDiv = async () => {
         setShowDiv(!showDiv);    

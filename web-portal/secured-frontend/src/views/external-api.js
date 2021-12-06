@@ -9,7 +9,7 @@ const ExternalApi = () => {
   const [dataSets, setDatasets] = useState([]);
   const [userDataSets, setUserDataSets] = useState([]);
   const history = useHistory();
-  const serverUrl = process.env.REACT_APP_SERVER_URL;
+  const serverUrl = 'http://localhost:8080';
 
   const { getAccessTokenSilently } = useAuth0();
 
@@ -31,8 +31,8 @@ const ExternalApi = () => {
 
   const callSecureApi = async () => {
     try {
-      const token = await getAccessTokenSilently();
-
+      // const token = await getAccessTokenSilently();
+      const token = 'dummy'
       const response = await fetch(
         `${serverUrl}/api/private`,
         {
@@ -118,8 +118,12 @@ const ExternalApi = () => {
       //const responseData = await response.json();
       const responseData = [
         {
-          id: "714dbd7d-cde7-43bd-8b28-0b06f3f8285f",
-          dataSetName: "Weather"
+          id: "7476e48c-62af-40c1-b54f-9a478f39d76e",
+          dataSetName: "climate_change_dataset"
+        },
+        {
+          id: "c521caeb-49ca-4b76-99c3-bac5a676056f",
+          dataSetName: "esg_ratings_dataset"
         }
       ]
       setDatasets(responseData);

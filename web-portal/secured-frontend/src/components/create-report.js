@@ -44,11 +44,41 @@ const CreateReport = () => {
         }
     };
 
+    const callPostSave = async(reportId, reportWorkspaceId) => {
+      let data = {
+        reportPbId: reportId,
+        reportWorkspacePbId: reportWorkspaceId
+      };
+      try {
+        // const token = await getAccessTokenSilently();
+        const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5EQTBPRE0wTlRVNFJETkRRalpETkVFMlJETTJOemc0TUVZNE5qRTBOakZETlVVNFF6QTBOdyJ9.eyJodHRwczovL2FjY291bnRzLm1zY2kuY29tL21zY2lfdXNlcl9pZCI6InR0WlVhejlnNFBBdUN0UDRVWGl2VjMxSTdMdTlRNVU0VVFuWkxVRzJNTUEiLCJodHRwczovL2FjY291bnRzLm1zY2kuY29tL3RlbmFudHMiOlsiTVNDSSJdLCJodHRwczovL2FjY291bnRzLm1zY2kuY29tL2RvbWFpbiI6Im1zY2kuY29tIiwiaHR0cHM6Ly9hY2NvdW50cy5tc2NpLmNvbS9yb2xlcyI6W10sImlzcyI6Imh0dHBzOi8vbXNjaS1xYTEuYXV0aDAuY29tLyIsInN1YiI6IndhYWR8dHRaVWF6OWc0UEF1Q3RQNFVYaXZWMzFJN0x1OVE1VTRVUW5aTFVHMk1NQSIsImF1ZCI6WyJkYXRhZXhwbG9yZXItcWEiLCJodHRwczovL21zY2ktcWExLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2Mzg3OTQ1MjEsImV4cCI6MTYzODc5ODEyMSwiYXpwIjoia1p2ZllBY0JWMHU1cmdHSFluTVZsQU5pUFdUN2w3SWkiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIHJlYWQ6ZGF0YVNldCBvZmZsaW5lX2FjY2VzcyJ9.WQ3H0HY1gweueP5-jv2a_E4fqlzhDrxWGQIWB1qXM6yvojzM5-o0b5SnE0lpjn5uyMtcg8ieT7mbjSn6UfAkWsyqDvsCGugVvjK3e_3rOYHpU8QbBYS-zHmStXTCcggxMjqsQgTGUdoSIu7s-U16q8C46FaWh4NktmXrrS_ZbyPPxrZHk2sJuL35wWJA47GgiMv4UWRB52AXCB2F7cfDPHvz81RIyPDRRaAPY07fMphYymHj9mJjJNCsL-Qj83qCTABrK8BmotzIvf81Amo2VaefZE3HQoUcsrjv8g62h1t96oCAYOPFkhyKah4dr69BUKr4-JRYgNIIGtDb0A-B9Q";
+
+        const clonedReportResponse = await fetch(`${serverUrl}/reports/post/save`, {
+            method: 'POST',
+            mode: 'cors',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+            body: JSON.stringify(data)
+        });
+      
+      } catch (error) {
+        setMessage(error.message);
+      }
+  };
+
     useEffect(() => {
         console.log('entered useEffect()');
 
         const callGetEmbedConfig = async () => {
-              const pbiConfigResponse = await fetch(`${serverUrl}/datasets/config?datasetIds=7476e48c-62af-40c1-b54f-9a478f39d76e,c521caeb-49ca-4b76-99c3-bac5a676056f`);
+            const token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5EQTBPRE0wTlRVNFJETkRRalpETkVFMlJETTJOemc0TUVZNE5qRTBOakZETlVVNFF6QTBOdyJ9.eyJodHRwczovL2FjY291bnRzLm1zY2kuY29tL21zY2lfdXNlcl9pZCI6InR0WlVhejlnNFBBdUN0UDRVWGl2VjMxSTdMdTlRNVU0VVFuWkxVRzJNTUEiLCJodHRwczovL2FjY291bnRzLm1zY2kuY29tL3RlbmFudHMiOlsiTVNDSSJdLCJodHRwczovL2FjY291bnRzLm1zY2kuY29tL2RvbWFpbiI6Im1zY2kuY29tIiwiaHR0cHM6Ly9hY2NvdW50cy5tc2NpLmNvbS9yb2xlcyI6W10sImlzcyI6Imh0dHBzOi8vbXNjaS1xYTEuYXV0aDAuY29tLyIsInN1YiI6IndhYWR8dHRaVWF6OWc0UEF1Q3RQNFVYaXZWMzFJN0x1OVE1VTRVUW5aTFVHMk1NQSIsImF1ZCI6WyJkYXRhZXhwbG9yZXItcWEiLCJodHRwczovL21zY2ktcWExLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE2Mzg3OTQ1MjEsImV4cCI6MTYzODc5ODEyMSwiYXpwIjoia1p2ZllBY0JWMHU1cmdHSFluTVZsQU5pUFdUN2w3SWkiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIHJlYWQ6ZGF0YVNldCBvZmZsaW5lX2FjY2VzcyJ9.WQ3H0HY1gweueP5-jv2a_E4fqlzhDrxWGQIWB1qXM6yvojzM5-o0b5SnE0lpjn5uyMtcg8ieT7mbjSn6UfAkWsyqDvsCGugVvjK3e_3rOYHpU8QbBYS-zHmStXTCcggxMjqsQgTGUdoSIu7s-U16q8C46FaWh4NktmXrrS_ZbyPPxrZHk2sJuL35wWJA47GgiMv4UWRB52AXCB2F7cfDPHvz81RIyPDRRaAPY07fMphYymHj9mJjJNCsL-Qj83qCTABrK8BmotzIvf81Amo2VaefZE3HQoUcsrjv8g62h1t96oCAYOPFkhyKah4dr69BUKr4-JRYgNIIGtDb0A-B9Q";
+
+              const pbiConfigResponse = await fetch(`${serverUrl}/datasets/d1/config`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
               const pbiConfigResponseData = await pbiConfigResponse.json();
               setEmbedConfig(pbiConfigResponseData);
 
@@ -57,12 +87,12 @@ const CreateReport = () => {
             let embedCreateConfiguration = {
                 type: "report",
                 tokenType: 1,
-                accessToken: pbiConfigResponseData.embedToken.token,
-                embedUrl: pbiConfigResponseData.embedDatasets[0].createReportEmbedURL,
-                datasetId: pbiConfigResponseData.embedDatasets[0].id,
+                accessToken: pbiConfigResponseData.accessToken,
+                embedUrl: pbiConfigResponseData.embedUrl,
+                datasetId: pbiConfigResponseData.datasetId,
                 permissions: models.Permissions.All,
                 settings: {
-               
+                  useCustomSaveAsDialog: true,
                 panes: {
                     filters: {
                     expanded: true,
@@ -94,8 +124,8 @@ const CreateReport = () => {
 
                 report.on("saveAsTriggered", function (event) {
                     let saveAsParameters = {
-                        name: "newReport5",
-                        targetWorkspaceId: "fae2e405-c57d-4015-b72e-c5c691728a26"
+                        name: "newreport2",
+                        targetWorkspaceId: pbiConfigResponseData.targetWorkspaceId
                     };
                     report.saveAs(saveAsParameters);
                     console.log("sss");
@@ -104,13 +134,10 @@ const CreateReport = () => {
            
 
                 report.off("saved");
-                // report.on("saved", function (event) {
-                //     let reportId = event.detail.reportObjectId;
-                //     let reportName = event.detail.reportName;
-                //     let sourceWorkspaceId = "a586fb0a-38b7-4808-928f-a03c4b7292ee";
-                //     let destinationWorkspaceId = "fae2e405-c57d-4015-b72e-c5c691728a26";
-                //     callCloneReport(reportId, reportName, sourceWorkspaceId, destinationWorkspaceId);
-                // });
+                report.on("saved", function (event) {
+                    let reportId = event.detail.reportObjectId;
+                    callPostSave(reportId,pbiConfigResponseData.targetWorkspaceId);
+                });
             } else {
                 console.log('Report container was not found');
             }
